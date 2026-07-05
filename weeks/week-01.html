@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 1 — Liftoff: your AI cockpit · Software Development &amp; Cloud Engineering Bootcamp</title>
+<meta name="description" content="Week 1 of the bootcamp: install Antigravity, sign in with Gmail, connect GitHub, create your project repo from the starter kit, and run your first task through an AI agent.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF; --bg-soft:#F6F8FE; --card:#FFFFFF;
+    --ink:#101A3D; --body:#5A6480; --muted:#8A93A8; --line:#E9ECF7;
+    --blue:#2F54F6; --blue-ink:#2140D6; --blue-soft:#EBEFFF;
+    --purple:#7C3AED; --purple-soft:#F2ECFE;
+    --green:#10B981; --green-soft:#E4F6EF;
+    --amber:#F59E0B; --amber-soft:#FDF1DA;
+    --cyan:#0EA5E9; --cyan-soft:#E4F5FE;
+    --shadow:0 12px 34px -14px rgba(31,45,90,.18);
+    --shadow-lift:0 26px 50px -20px rgba(31,45,90,.28);
+    --radius:18px; --wrap:1160px; --read:800px;
+    --display:"Sora",system-ui,sans-serif; --font:"Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{margin:0;background:var(--bg);color:var(--body);font-family:var(--font);font-size:16.5px;line-height:1.68;-webkit-font-smoothing:antialiased}
+  a{color:var(--blue);text-decoration:none}
+  a:hover{text-decoration:underline}
+  h1,h2,h3,h4{font-family:var(--display);color:var(--ink);line-height:1.16;margin:0;font-weight:700}
+  p{margin:0 0 1rem}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);font-weight:600;margin:0 0 .8rem;display:flex;align-items:center;gap:10px}
+  .eyebrow::after{content:"";height:2px;width:34px;background:var(--blue);border-radius:2px;opacity:.5}
+  code{font-family:var(--mono);font-size:.86em;background:var(--blue-soft);color:var(--blue-ink);padding:2px 7px;border-radius:6px}
+
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;gap:18px;height:68px;max-width:var(--wrap);margin:0 auto;padding:0 24px}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto;min-width:0}
+  .brand:hover{text-decoration:none}
+  .brand .logo{width:36px;height:36px;flex:none}
+  .brand .bt{display:flex;flex-direction:column;line-height:1.05;min-width:0}
+  .brand .bt b{font-family:var(--display);font-weight:700;color:var(--ink);font-size:.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand .bt span{font-size:.72rem;color:var(--muted);font-weight:500}
+  .nav-back{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:.9rem;color:var(--body);background:var(--blue-soft);padding:9px 14px;border-radius:10px;white-space:nowrap}
+  .nav-back:hover{color:var(--blue-ink);text-decoration:none}
+  @media (max-width:640px){.brand .bt span{display:none}}
+
+  /* HEADER */
+  .head-bg{background:
+     radial-gradient(55% 60% at 88% 0%, rgba(124,58,237,.10), transparent 60%),
+     radial-gradient(50% 55% at 6% 6%, rgba(47,84,246,.10), transparent 55%),
+     linear-gradient(180deg,#F7F9FF,#FFFFFF 75%);border-bottom:1px solid var(--line)}
+  .lesson-head{padding:44px 0 34px}
+  .crumb{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-bottom:16px}
+  .crumb a{color:var(--body);font-weight:600}
+  h1.big{font-size:clamp(2.1rem,4.4vw,3.1rem);font-weight:800;letter-spacing:-.02em;color:var(--ink);max-width:20ch}
+  .lead{font-size:1.14rem;color:var(--body);max-width:60ch;margin:18px 0 22px}
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 14px;box-shadow:var(--shadow);font-size:.85rem;font-weight:600;color:var(--ink)}
+  .chip .dot{width:9px;height:9px;border-radius:3px;background:var(--blue)}
+  .chip.g .dot{background:var(--green)} .chip.p .dot{background:var(--purple)} .chip.a .dot{background:var(--amber)}
+
+  /* LAYOUT */
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:44px;align-items:start;padding:44px 0 20px}
+  @media (max-width:960px){.layout{grid-template-columns:1fr;gap:8px}}
+  .content{max-width:var(--read);min-width:0}
+  .content h2{font-size:clamp(1.5rem,3vw,1.9rem);margin:8px 0 6px;scroll-margin-top:88px}
+  .content h3{font-size:1.2rem;margin:26px 0 6px}
+  .content p{color:var(--body)}
+  .content ul,.content ol{color:var(--body);padding-left:1.3em;margin:0 0 1rem}
+  .content li{margin:.35rem 0}
+  .content strong,.content b{color:var(--ink)}
+
+  .step{position:relative;padding:30px 0 34px;border-top:1px solid var(--line)}
+  .step:first-of-type{border-top:0}
+  .step .kicker{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .step .sn{width:40px;height:40px;border-radius:11px;background:var(--blue);color:#fff;display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:1rem;flex:none;box-shadow:0 10px 20px -10px rgba(47,84,246,.6)}
+  .step.s2 .sn{background:var(--purple);box-shadow:0 10px 20px -10px rgba(124,58,237,.6)}
+  .step.s3 .sn{background:var(--green);box-shadow:0 10px 20px -10px rgba(16,185,129,.5)}
+  .step.s4 .sn{background:var(--amber);color:#5a3d00}
+  .step.s5 .sn{background:var(--cyan)}
+  .step .kicker h2{margin:0}
+  .est{font-family:var(--mono);font-size:.7rem;font-weight:600;color:var(--muted);letter-spacing:.04em}
+
+  /* CODE BLOCK */
+  .code{background:#0F1B3D;color:#D9E1FF;border-radius:14px;padding:16px 18px;overflow-x:auto;font-family:var(--mono);font-size:.86rem;line-height:1.7;margin:0 0 1rem;box-shadow:var(--shadow)}
+  .code .c{color:#7C89BC}
+  .code .g{color:#37D3A6}
+  .code b{color:#9FB4FF;font-weight:600}
+
+  /* NOTES */
+  .note{display:flex;gap:14px;align-items:flex-start;background:var(--blue-soft);border-radius:14px;padding:16px 18px;border:1px solid #DCE3FF;margin:0 0 1.1rem}
+  .note.tip{background:var(--green-soft);border-color:#C7EBDC}
+  .note.warn{background:var(--amber-soft);border-color:#F6E3BE}
+  .note.rule{background:linear-gradient(120deg,#131f45,#0F1B3D);border:0;color:#fff}
+  .note .i{font-size:1.25rem;line-height:1.2;flex:none}
+  .note p{margin:0;font-size:.97rem;color:#3A4468}
+  .note b{color:var(--blue-ink)}
+  .note.tip b{color:#0b7a54} .note.warn b{color:#9A6200}
+  .note.rule p{color:#DDE5FF} .note.rule b{color:#fff}
+  .note.rule .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#8FA6FF;font-weight:600;display:block;margin-bottom:5px}
+
+  /* DECISION BOX */
+  .decision{background:#fff;border:1px solid var(--line);border-left:5px solid var(--purple);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);margin:0 0 1.1rem}
+  .decision .dh{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:700;color:var(--ink);font-size:1.02rem;margin-bottom:6px}
+  .decision .dh .tag{font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--purple);background:var(--purple-soft);padding:3px 8px;border-radius:6px}
+  .decision p{margin:0 0 .5rem;font-size:.96rem}
+  .decision p:last-child{margin:0}
+
+  /* CHECKLIST */
+  .check{list-style:none;padding:0;margin:0 0 1rem;display:grid;gap:10px}
+  .check li{display:flex;gap:11px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 15px;box-shadow:var(--shadow);font-size:.96rem;color:var(--ink)}
+  .check .tick{color:var(--green);font-weight:800;flex:none}
+
+  /* OBJECTIVES CARD */
+  .objectives{background:var(--bg-soft);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;margin:0 0 6px}
+  .objectives h2{margin:0 0 12px;font-size:1.25rem}
+  .objectives ul{margin:0;padding-left:1.2em}
+  .objectives li{margin:.4rem 0}
+
+  /* TOC */
+  .toc{position:sticky;top:88px;font-size:.9rem}
+  @media (max-width:960px){.toc{display:none}}
+  .toc .tt{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:12px}
+  .toc a{display:block;color:var(--body);padding:6px 0 6px 14px;border-left:2px solid var(--line);font-weight:500}
+  .toc a:hover{color:var(--blue);border-color:var(--blue);text-decoration:none}
+
+  /* DONE / DEMO */
+  .done{background:linear-gradient(180deg,#fff,#FBFCFF);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;box-shadow:var(--shadow);margin:8px 0 0}
+  .done h2{margin:0 0 6px}
+  .demo{list-style:none;counter-reset:d;padding:0;margin:10px 0 0}
+  .demo li{counter-increment:d;display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.96rem;color:var(--ink)}
+  .demo li:last-child{border-bottom:0}
+  .demo li::before{content:counter(d);font-family:var(--mono);font-weight:600;color:var(--purple);flex:none;width:20px}
+
+  /* FAQ */
+  details{background:#fff;border:1px solid var(--line);border-radius:12px;padding:2px 18px;margin:0 0 10px;box-shadow:var(--shadow)}
+  details summary{cursor:pointer;font-weight:600;color:var(--ink);padding:14px 0;list-style:none;display:flex;align-items:center;gap:10px}
+  details summary::-webkit-details-marker{display:none}
+  details summary::before{content:"+";font-family:var(--mono);color:var(--blue);font-size:1.1rem;flex:none}
+  details[open] summary::before{content:"–"}
+  details .fa{padding:0 0 14px;font-size:.95rem;color:var(--body)}
+  details .fa p:last-child{margin:0}
+
+  /* PREV/NEXT */
+  .pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:40px 0 10px}
+  @media (max-width:600px){.pager{grid-template-columns:1fr}}
+  .pg{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);display:block}
+  .pg:hover{border-color:var(--blue);text-decoration:none;transform:translateY(-3px);transition:.16s}
+  .pg .l{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .pg h4{margin:5px 0 0;font-size:1.05rem}
+  .pg.next{text-align:right}
+  .pg.soon{opacity:.75;cursor:default}
+  .pg.soon:hover{border-color:var(--line);transform:none}
+
+  footer{padding:44px 0;border-top:1px solid var(--line);margin-top:20px;background:var(--bg-soft)}
+  .foot{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+  .foot p{margin:0;color:var(--body);font-size:.9rem}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:6px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="../index.html" aria-label="Home">
+      <svg class="logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="48" y2="48"><stop offset="0" stop-color="#2F54F6"/><stop offset="1" stop-color="#7C3AED"/></linearGradient></defs>
+        <path d="M16 24c0-5 3.6-9 8-9s8 4 8 9-3.6 9-8 9c-3 0-5-1.8-6.4-4" stroke="url(#lg)" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <path d="M32 24c0-5-3.6-9-8-9-3 0-5 1.8-6.4 4" stroke="#2F54F6" stroke-width="5" stroke-linecap="round" fill="none" opacity=".5"/>
+        <circle cx="24" cy="24" r="22" stroke="url(#lg)" stroke-width="2.4" opacity=".18"/>
+      </svg>
+      <span class="bt"><b>Software Development &amp; Cloud Engineering Bootcamp</b><span>Spec it · Build it · Ship it</span></span>
+    </a>
+    <a class="nav-back" href="../index.html#roadmap">← Roadmap</a>
+  </div>
+</nav>
+
+<div class="head-bg">
+  <header class="wrap lesson-head">
+    <div class="crumb"><a href="../index.html">Home</a> / <a href="../index.html#roadmap">Roadmap</a> / Week 1</div>
+    <p class="eyebrow">Week 01 · Set up &amp; spec</p>
+    <h1 class="big">Liftoff: your AI cockpit</h1>
+    <p class="lead">This week you don't build the app yet — you build the cockpit you'll fly for the next 12 weeks. Get Antigravity running, sign in, wire up GitHub, push an empty repo, and run your very first task through an AI agent. When week 2 starts, you should be thinking about your product — not fighting installers.</p>
+    <div class="chips">
+      <span class="chip"><span class="dot"></span>≈ 2–3 hours</span>
+      <span class="chip p"><span class="dot"></span>Phase: Set up &amp; spec</span>
+      <span class="chip g"><span class="dot"></span>Ship: repo pushed + Antigravity running</span>
+    </div>
+  </header>
+</div>
+
+<div class="wrap layout">
+  <main class="content">
+
+    <div class="objectives">
+      <h2>🎯 By the end of this week</h2>
+      <ul>
+        <li>Antigravity is installed and open, signed in with your <b>Gmail</b>.</li>
+        <li><b>Git</b> works on your machine and your identity is configured.</li>
+        <li>Your project <b>repository lives on GitHub</b>, with the starter kit and a first commit pushed.</li>
+        <li>You've run <b>one small task through an AI agent</b> and reviewed its diff before accepting it.</li>
+        <li>You've made two design calls — <b>repo layout</b> and <b>agent autonomy</b> — and written them down.</li>
+      </ul>
+    </div>
+
+    <div class="note tip" style="margin-top:22px">
+      <span class="i">💡</span>
+      <p><b>New to any of this?</b> That's expected. The point of week 1 is to get comfortable directing tools, not to memorise commands. Copy the commands, read what they do, and ask your agent to explain anything that's unclear.</p>
+    </div>
+
+    <section class="step s1" id="antigravity">
+      <div class="kicker"><span class="sn">1</span><h2>Install Antigravity</h2></div>
+      <span class="est">≈ 15 min</span>
+      <p>Antigravity is an <b>AI-first IDE</b> — a fork of VS Code with an AI agent built into the editor. It's a full application you install, not a browser plugin. This is where you'll write specs, direct the agent, review diffs, and run your app all week.</p>
+      <ol>
+        <li>Go to <a href="https://antigravity.google" target="_blank" rel="noopener">antigravity.google</a> and download the build for your operating system (Windows, macOS or Linux).</li>
+        <li>Install it the normal way for your OS, then launch it.</li>
+        <li>On first launch it offers to <b>import your VS Code settings, themes and keybindings</b> — accept if you already use VS Code, so it feels familiar from minute one.</li>
+      </ol>
+      <div class="note warn">
+        <span class="i">⚠️</span>
+        <p><b>macOS blocked the app?</b> If you see "app can't be opened because it is from an unidentified developer", open <b>System Settings → Privacy &amp; Security</b>, scroll down, and click <b>Open Anyway</b>. This is normal for freshly downloaded apps.</p>
+      </div>
+    </section>
+
+    <section class="step s2" id="gmail">
+      <div class="kicker"><span class="sn">2</span><h2>Sign in with Gmail</h2></div>
+      <span class="est">≈ 5 min</span>
+      <p>Use a <b>personal Gmail account</b> and stick with it for the whole course. You'll reuse this same Google identity later for Supabase Auth and the "Sign in with Gmail" feature in your app, so keeping one account avoids confusion in week 5.</p>
+      <ol>
+        <li>In Antigravity, open the account / sign-in panel and choose <b>Sign in with Google</b>.</li>
+        <li>Pick your personal Gmail, review what's requested, and approve.</li>
+        <li>Confirm you're signed in — your account should show in the editor, and the AI agent panel should be available.</li>
+      </ol>
+      <div class="note">
+        <span class="i">🔑</span>
+        <p><b>Write down which Gmail you used.</b> Every account this course touches — GitHub, Supabase, Vercel, Google Cloud — should be reachable from this one inbox. One identity, fewer headaches.</p>
+      </div>
+    </section>
+
+    <section class="step s3" id="github">
+      <div class="kicker"><span class="sn">3</span><h2>Connect GitHub</h2></div>
+      <span class="est">≈ 15 min</span>
+      <p>GitHub is where your code lives and, later, where a push will automatically build and deploy your app. First make sure <b>Git</b> is installed locally, then connect your GitHub account.</p>
+
+      <h3>Check Git is installed</h3>
+      <p>Open a terminal (there's one built into Antigravity: <b>View → Terminal</b>) and run:</p>
+      <pre class="code"><span class="c"># should print a version number</span>
+git --version</pre>
+      <p>If it's missing: on macOS run <code>xcode-select --install</code>; on Windows install <a href="https://git-scm.com/download/win" target="_blank" rel="noopener">Git for Windows</a>; on Linux use your package manager (e.g. <code>sudo apt install git</code>).</p>
+
+      <h3>Tell Git who you are</h3>
+      <p>These two lines stamp your name and email onto every commit you make:</p>
+      <pre class="code">git config --global user.name <b>"Your Name"</b>
+git config --global user.email <b>"you@gmail.com"</b></pre>
+
+      <h3>Sign in to GitHub</h3>
+      <ul>
+        <li>Create a free account at <a href="https://github.com" target="_blank" rel="noopener">github.com</a> if you don't have one (use the same email where you can).</li>
+        <li>In Antigravity, sign in to GitHub through the built-in GitHub / Source Control panel and authorise it in the browser.</li>
+        <li>This lets the editor create repos and push on your behalf without pasting tokens by hand.</li>
+      </ul>
+      <div class="note tip">
+        <span class="i">✅</span>
+        <p><b>Quick sanity check:</b> if the Source Control panel shows your GitHub username and offers to "Publish to GitHub", you're connected.</p>
+      </div>
+    </section>
+
+    <section class="step s4" id="repo">
+      <div class="kicker"><span class="sn">4</span><h2>Create your project repo</h2></div>
+      <span class="est">≈ 20 min</span>
+      <p>Now make the home for your project. You'll start from the <b>starter kit</b> — a scaffold with folders for the front end, back end and docs already in place — so week 2 begins with structure, not a blank page.</p>
+
+      <h3>Get the starter kit</h3>
+      <p>Download it from the course home page: <a href="../index.html#setup">Grab the starter kit → Starter repo (.zip)</a>. Unzip it somewhere sensible, like <code>~/projects/fitness-tracker</code>, and open that folder in Antigravity (<b>File → Open Folder</b>).</p>
+      <p>Take a minute to look around. You'll see:</p>
+      <pre class="code">.
+├── docs/
+│   ├── SPEC.md          <span class="c"># WHAT you're building (week 2)</span>
+│   └── ARCH.md          <span class="c"># HOW it's built (week 3)</span>
+├── frontend/            <span class="c"># React app → Vercel</span>
+├── backend/             <span class="c"># API + Dockerfile → AWS</span>
+├── .github/workflows/   <span class="c"># GitOps: build/deploy on push</span>
+├── .env.example         <span class="c"># copy to .env, never commit .env</span>
+└── .gitignore</pre>
+
+      <h3>Publish it to GitHub</h3>
+      <p>The easiest path is Antigravity's <b>"Publish to GitHub"</b> button in the Source Control panel — pick a name, choose <b>Private</b>, and it creates the repo and pushes for you. Prefer the command line? From inside the project folder:</p>
+      <pre class="code"><span class="c"># start tracking, make your first commit</span>
+git init
+git add .
+git commit -m <b>"Initial commit: project scaffold"</b>
+
+<span class="c"># create the repo on GitHub and push (needs the GitHub CLI)</span>
+gh repo create fitness-tracker --private --source=. --push
+
+<span class="c"># …or, if you made the empty repo on github.com first:</span>
+git remote add origin <b>git@github.com:your-user/fitness-tracker.git</b>
+git branch -M main
+git push -u origin main</pre>
+      <div class="note warn">
+        <span class="i">🔒</span>
+        <p><b>Make it private for now,</b> and never commit a real <code>.env</code>. The <code>.gitignore</code> in the starter already excludes it — that's deliberate. Secrets live outside git for the whole course.</p>
+      </div>
+      <p>Refresh your repo on github.com. Seeing the starter files there means <b>the "ship" for this week is done.</b></p>
+    </section>
+
+    <section class="step s5" id="agent">
+      <div class="kicker"><span class="sn">5</span><h2>Meet your agent: the loop</h2></div>
+      <span class="est">≈ 25 min</span>
+      <p>Here's the habit the whole course is built on. You don't type the code — you <b>direct</b> an agent and stay responsible for the result. Every task follows the same loop:</p>
+      <ol>
+        <li><b>Prompt</b> — tell the agent, in plain words, what you want and why.</li>
+        <li><b>Review the diff</b> — read exactly what it proposes to change <em>before</em> accepting.</li>
+        <li><b>Run it</b> — actually execute the result and see it work (or not).</li>
+        <li><b>Fix it</b> — feed back what's wrong, or tweak it yourself, and go again.</li>
+      </ol>
+
+      <h3>Try it now — a tiny first task</h3>
+      <p>Open the agent panel and give it something small and safe, so the point is the <em>workflow</em>, not the output. For example:</p>
+      <pre class="code"><span class="c">Prompt to your agent:</span>
+<b>"Open README.md. Add a short section titled 'About me' with my
+name and one sentence about the app I want to build. Keep the rest
+of the file unchanged."</b></pre>
+      <p>When it responds, <b>do not just click accept.</b> Read the diff: green lines are additions, red are removals. Ask yourself — did it touch only what I asked for? Then accept, and commit the change:</p>
+      <pre class="code">git add README.md
+git commit -m <b>"Add About me to README"</b>
+git push</pre>
+      <div class="note rule">
+        <span class="i">🧠</span>
+        <p><span class="k">The one rule</span>You may let AI write the code — but you may not ship what you can't explain. If you couldn't describe what that diff did, that's the next thing you learn, not the next thing you merge.</p>
+      </div>
+    </section>
+
+    <h2 id="decisions" style="margin-top:8px">Your design decisions this week</h2>
+    <p>Two small calls are yours to make. There's no single right answer — decide, and jot a line about <em>why</em> so you can defend it at the Friday demo.</p>
+
+    <div class="decision">
+      <div class="dh"><span class="tag">Decide</span> Repo layout</div>
+      <p>The starter uses a <b>monorepo</b>: front end, back end and docs in one repository. That's the recommended default for this course — one place, one history, simpler deploys. The alternative is separate repos per part.</p>
+      <p><b>Your call:</b> keep the monorepo (recommended), or split it — and note the reason.</p>
+    </div>
+
+    <div class="decision">
+      <div class="dh"><span class="tag">Decide</span> Agent autonomy</div>
+      <p>How much rope do you give the agent? At one end, it edits freely and you review afterward; at the other, you approve every single change first.</p>
+      <p><b>Your call for week 1:</b> start conservative — <b>review every diff before accepting.</b> You can loosen this later once you trust it on a given kind of task.</p>
+    </div>
+
+    <div class="note tip">
+      <span class="i">✍️</span>
+      <p><b>Write it down.</b> Ask your agent: <em>"Add a short 'Decisions' section to the README noting my repo layout and how I'll review the agent's work."</em> Review the diff, accept, commit. That's the loop again — and now your choices are on the record.</p>
+    </div>
+
+    <div class="done" id="done">
+      <h2>✅ Definition of done</h2>
+      <p>You've finished week 1 when you can tick every box:</p>
+      <ul class="check">
+        <li><span class="tick">✓</span> Antigravity opens and you're signed in with your Gmail.</li>
+        <li><span class="tick">✓</span> <code>git --version</code> works and your <code>user.name</code> / <code>user.email</code> are set.</li>
+        <li><span class="tick">✓</span> A private repo exists on GitHub with the starter kit and your first commit pushed.</li>
+        <li><span class="tick">✓</span> You ran at least one agent task and <b>reviewed the diff</b> before accepting.</li>
+        <li><span class="tick">✓</span> Your repo layout and autonomy decisions are written in the README.</li>
+        <li><span class="tick">✓</span> You can open your repo on github.com and explain what each top-level folder is for.</li>
+      </ul>
+    </div>
+
+    <h2 id="demo" style="margin-top:34px">🎤 Friday demo — 5 minutes</h2>
+    <p>Same format every week. For week 1, walk us through:</p>
+    <ol class="demo">
+      <li>Antigravity open, signed in — show the agent panel.</li>
+      <li>Your repo on github.com with the starter files.</li>
+      <li>The diff from your agent task — explain what it changed and why.</li>
+      <li>One thing that surprised you or went wrong during setup.</li>
+      <li>What you plan to spec next week.</li>
+    </ol>
+    <div class="note">
+      <span class="i">🗣️</span>
+      <p>Show the running tools and the diff — <b>talk us through it, don't read slides.</b> Owning "here's what confused me" is worth more than a flawless run.</p>
+    </div>
+
+    <h2 id="help" style="margin-top:34px">Stuck? Common snags</h2>
+    <details>
+      <summary>Antigravity won't install or open</summary>
+      <div class="fa"><p>On macOS, use <b>System Settings → Privacy &amp; Security → Open Anyway</b> after the first blocked launch. On Windows, right-click the installer and <b>Run as administrator</b> if it stalls. Make sure you downloaded the build that matches your OS and chip (Apple Silicon vs Intel).</p></div>
+    </details>
+    <details>
+      <summary><code>git</code> is "command not found"</summary>
+      <div class="fa"><p>Git isn't installed or your terminal hasn't picked it up. Install it (macOS: <code>xcode-select --install</code>; Windows: Git for Windows; Linux: your package manager), then <b>close and reopen the terminal</b> so it re-reads your PATH.</p></div>
+    </details>
+    <details>
+      <summary>My push was rejected / it asks for a password</summary>
+      <div class="fa"><p>GitHub no longer accepts your account password over HTTPS. Easiest fix: sign in to GitHub inside Antigravity and use <b>"Publish to GitHub"</b>, or install the <a href="https://cli.github.com" target="_blank" rel="noopener">GitHub CLI</a> and run <code>gh auth login</code> once. After that, pushes just work.</p></div>
+    </details>
+    <details>
+      <summary>The agent changed more than I asked for</summary>
+      <div class="fa"><p>Good — you caught it, which is the whole skill. <b>Don't accept the diff.</b> Reject it and re-prompt more tightly: name the file, say "change only this", and "leave everything else unchanged". Smaller, specific prompts give smaller, reviewable diffs.</p></div>
+    </details>
+    <details>
+      <summary>I accidentally committed a secret / <code>.env</code></summary>
+      <div class="fa"><p>Remove it from tracking with <code>git rm --cached .env</code>, confirm <code>.env</code> is listed in <code>.gitignore</code>, then commit. If it was a real key, <b>rotate (regenerate) that key</b> — anything pushed to GitHub should be treated as exposed.</p></div>
+    </details>
+
+    <div class="pager">
+      <a class="pg" href="../index.html#roadmap">
+        <div class="l">← Back</div>
+        <h4>The 12-week roadmap</h4>
+      </a>
+      <div class="pg next soon">
+        <div class="l">Next →</div>
+        <h4>Week 2 · Write the spec <span style="color:var(--muted);font-weight:600">(soon)</span></h4>
+      </div>
+    </div>
+
+  </main>
+
+  <aside class="toc" aria-label="On this page">
+    <div class="tt">On this page</div>
+    <a href="#antigravity">1 · Install Antigravity</a>
+    <a href="#gmail">2 · Sign in with Gmail</a>
+    <a href="#github">3 · Connect GitHub</a>
+    <a href="#repo">4 · Create your repo</a>
+    <a href="#agent">5 · Meet your agent</a>
+    <a href="#decisions">Design decisions</a>
+    <a href="#done">Definition of done</a>
+    <a href="#demo">Friday demo</a>
+    <a href="#help">Common snags</a>
+  </aside>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../index.html" style="margin-right:0">
+      <svg class="logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M16 24c0-5 3.6-9 8-9s8 4 8 9-3.6 9-8 9c-3 0-5-1.8-6.4-4" stroke="url(#lg)" stroke-width="5" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span class="bt"><b>Software Development &amp; Cloud Engineering Bootcamp</b><span>Spec it · Build it · Ship it</span></span>
+    </a>
+    <p>Week 1 of 12 · Spec it · build it with AI · ship it to the cloud.</p>
+  </div>
+</footer>
+
+</body>
+</html>
