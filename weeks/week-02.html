@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 2 — Write the spec · Software Development &amp; Cloud Engineering Bootcamp</title>
+<meta name="description" content="Week 2 of the bootcamp: learn spec-driven development and draft SPEC.md — users, core features, non-goals, data, sign-in, journeys and success criteria.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF; --bg-soft:#F6F8FE; --card:#FFFFFF;
+    --ink:#101A3D; --body:#5A6480; --muted:#8A93A8; --line:#E9ECF7;
+    --blue:#2F54F6; --blue-ink:#2140D6; --blue-soft:#EBEFFF;
+    --purple:#7C3AED; --purple-soft:#F2ECFE;
+    --green:#10B981; --green-soft:#E4F6EF;
+    --amber:#F59E0B; --amber-soft:#FDF1DA;
+    --cyan:#0EA5E9; --cyan-soft:#E4F5FE;
+    --shadow:0 12px 34px -14px rgba(31,45,90,.18);
+    --shadow-lift:0 26px 50px -20px rgba(31,45,90,.28);
+    --radius:18px; --wrap:1160px; --read:800px;
+    --display:"Sora",system-ui,sans-serif; --font:"Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{margin:0;background:var(--bg);color:var(--body);font-family:var(--font);font-size:16.5px;line-height:1.68;-webkit-font-smoothing:antialiased}
+  a{color:var(--blue);text-decoration:none}
+  a:hover{text-decoration:underline}
+  h1,h2,h3,h4{font-family:var(--display);color:var(--ink);line-height:1.16;margin:0;font-weight:700}
+  p{margin:0 0 1rem}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);font-weight:600;margin:0 0 .8rem;display:flex;align-items:center;gap:10px}
+  .eyebrow::after{content:"";height:2px;width:34px;background:var(--blue);border-radius:2px;opacity:.5}
+  code{font-family:var(--mono);font-size:.86em;background:var(--blue-soft);color:var(--blue-ink);padding:2px 7px;border-radius:6px}
+  .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;gap:18px;height:68px;max-width:var(--wrap);margin:0 auto;padding:0 24px}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto;min-width:0}
+  .brand:hover{text-decoration:none}
+  .brand .logo{width:36px;height:36px;flex:none}
+  .brand .bt{display:flex;flex-direction:column;line-height:1.05;min-width:0}
+  .brand .bt b{font-family:var(--display);font-weight:700;color:var(--ink);font-size:.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand .bt span{font-size:.72rem;color:var(--muted);font-weight:500}
+  .nav-back{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:.9rem;color:var(--body);background:var(--blue-soft);padding:9px 14px;border-radius:10px;white-space:nowrap}
+  .nav-back:hover{color:var(--blue-ink);text-decoration:none}
+  @media (max-width:640px){.brand .bt span{display:none}}
+  .head-bg{background:radial-gradient(55% 60% at 88% 0%, rgba(124,58,237,.10), transparent 60%),radial-gradient(50% 55% at 6% 6%, rgba(47,84,246,.10), transparent 55%),linear-gradient(180deg,#F7F9FF,#FFFFFF 75%);border-bottom:1px solid var(--line)}
+  .lesson-head{padding:44px 0 34px}
+  .crumb{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-bottom:16px}
+  .crumb a{color:var(--body);font-weight:600}
+  h1.big{font-size:clamp(2.1rem,4.4vw,3.1rem);font-weight:800;letter-spacing:-.02em;color:var(--ink);max-width:20ch}
+  .lead{font-size:1.14rem;color:var(--body);max-width:60ch;margin:18px 0 22px}
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 14px;box-shadow:var(--shadow);font-size:.85rem;font-weight:600;color:var(--ink)}
+  .chip .dot{width:9px;height:9px;border-radius:3px;background:var(--blue)}
+  .chip.g .dot{background:var(--green)} .chip.p .dot{background:var(--purple)} .chip.a .dot{background:var(--amber)}
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:44px;align-items:start;padding:44px 0 20px}
+  @media (max-width:960px){.layout{grid-template-columns:1fr;gap:8px}}
+  .content{max-width:var(--read);min-width:0}
+  .content h2{font-size:clamp(1.5rem,3vw,1.9rem);margin:8px 0 6px;scroll-margin-top:88px}
+  .content h3{font-size:1.2rem;margin:26px 0 6px}
+  .content p{color:var(--body)}
+  .content ul,.content ol{color:var(--body);padding-left:1.3em;margin:0 0 1rem}
+  .content li{margin:.35rem 0}
+  .content strong,.content b{color:var(--ink)}
+  .step{position:relative;padding:30px 0 34px;border-top:1px solid var(--line)}
+  .step:first-of-type{border-top:0}
+  .step .kicker{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .step .sn{width:40px;height:40px;border-radius:11px;background:var(--blue);color:#fff;display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:1rem;flex:none;box-shadow:0 10px 20px -10px rgba(47,84,246,.6)}
+  .step.s2 .sn{background:var(--purple);box-shadow:0 10px 20px -10px rgba(124,58,237,.6)}
+  .step.s3 .sn{background:var(--green);box-shadow:0 10px 20px -10px rgba(16,185,129,.5)}
+  .step.s4 .sn{background:var(--amber);color:#5a3d00}
+  .step.s5 .sn{background:var(--cyan)}
+  .step.s6 .sn{background:var(--blue-ink)}
+  .step .kicker h2{margin:0}
+  .est{font-family:var(--mono);font-size:.7rem;font-weight:600;color:var(--muted);letter-spacing:.04em}
+  .code{background:#0F1B3D;color:#D9E1FF;border-radius:14px;padding:16px 18px;overflow-x:auto;font-family:var(--mono);font-size:.86rem;line-height:1.7;margin:0 0 1rem;box-shadow:var(--shadow)}
+  .code .c{color:#7C89BC}
+  .code .g{color:#37D3A6}
+  .code b{color:#9FB4FF;font-weight:600}
+  .note{display:flex;gap:14px;align-items:flex-start;background:var(--blue-soft);border-radius:14px;padding:16px 18px;border:1px solid #DCE3FF;margin:0 0 1.1rem}
+  .note.tip{background:var(--green-soft);border-color:#C7EBDC}
+  .note.warn{background:var(--amber-soft);border-color:#F6E3BE}
+  .note.rule{background:linear-gradient(120deg,#131f45,#0F1B3D);border:0;color:#fff}
+  .note .i{font-size:1.25rem;line-height:1.2;flex:none}
+  .note p{margin:0;font-size:.97rem;color:#3A4468}
+  .note b{color:var(--blue-ink)}
+  .note.tip b{color:#0b7a54} .note.warn b{color:#9A6200}
+  .note.rule p{color:#DDE5FF} .note.rule b{color:#fff}
+  .note.rule .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#8FA6FF;font-weight:600;display:block;margin-bottom:5px}
+  .decision{background:#fff;border:1px solid var(--line);border-left:5px solid var(--purple);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);margin:0 0 1.1rem}
+  .decision .dh{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:700;color:var(--ink);font-size:1.02rem;margin-bottom:6px}
+  .decision .dh .tag{font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--purple);background:var(--purple-soft);padding:3px 8px;border-radius:6px}
+  .decision p{margin:0 0 .5rem;font-size:.96rem}
+  .decision p:last-child{margin:0}
+  .check{list-style:none;padding:0;margin:0 0 1rem;display:grid;gap:10px}
+  .check li{display:flex;gap:11px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 15px;box-shadow:var(--shadow);font-size:.96rem;color:var(--ink)}
+  .check .tick{color:var(--green);font-weight:800;flex:none}
+  .objectives{background:var(--bg-soft);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;margin:0 0 6px}
+  .objectives h2{margin:0 0 12px;font-size:1.25rem}
+  .objectives ul{margin:0;padding-left:1.2em}
+  .objectives li{margin:.4rem 0}
+  .toc{position:sticky;top:88px;font-size:.9rem}
+  @media (max-width:960px){.toc{display:none}}
+  .toc .tt{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:12px}
+  .toc a{display:block;color:var(--body);padding:6px 0 6px 14px;border-left:2px solid var(--line);font-weight:500}
+  .toc a:hover{color:var(--blue);border-color:var(--blue);text-decoration:none}
+  .done{background:linear-gradient(180deg,#fff,#FBFCFF);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;box-shadow:var(--shadow);margin:8px 0 0}
+  .done h2{margin:0 0 6px}
+  .demo{list-style:none;counter-reset:d;padding:0;margin:10px 0 0}
+  .demo li{counter-increment:d;display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.96rem;color:var(--ink)}
+  .demo li:last-child{border-bottom:0}
+  .demo li::before{content:counter(d);font-family:var(--mono);font-weight:600;color:var(--purple);flex:none;width:20px}
+  details{background:#fff;border:1px solid var(--line);border-radius:12px;padding:2px 18px;margin:0 0 10px;box-shadow:var(--shadow)}
+  details summary{cursor:pointer;font-weight:600;color:var(--ink);padding:14px 0;list-style:none;display:flex;align-items:center;gap:10px}
+  details summary::-webkit-details-marker{display:none}
+  details summary::before{content:"+";font-family:var(--mono);color:var(--blue);font-size:1.1rem;flex:none}
+  details[open] summary::before{content:"–"}
+  details .fa{padding:0 0 14px;font-size:.95rem;color:var(--body)}
+  details .fa p:last-child{margin:0}
+  .pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:40px 0 10px}
+  @media (max-width:600px){.pager{grid-template-columns:1fr}}
+  .pg{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);display:block}
+  .pg:hover{border-color:var(--blue);text-decoration:none;transform:translateY(-3px);transition:.16s}
+  .pg .l{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .pg h4{margin:5px 0 0;font-size:1.05rem}
+  .pg.next{text-align:right}
+  footer{padding:44px 0;border-top:1px solid var(--line);margin-top:20px;background:var(--bg-soft)}
+  .foot{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+  .foot p{margin:0;color:var(--body);font-size:.9rem}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:6px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="../index.html" aria-label="Home">
+      <svg class="logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="48" y2="48"><stop offset="0" stop-color="#2F54F6"/><stop offset="1" stop-color="#7C3AED"/></linearGradient></defs>
+        <path d="M16 24c0-5 3.6-9 8-9s8 4 8 9-3.6 9-8 9c-3 0-5-1.8-6.4-4" stroke="url(#lg)" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <path d="M32 24c0-5-3.6-9-8-9-3 0-5 1.8-6.4 4" stroke="#2F54F6" stroke-width="5" stroke-linecap="round" fill="none" opacity=".5"/>
+        <circle cx="24" cy="24" r="22" stroke="url(#lg)" stroke-width="2.4" opacity=".18"/>
+      </svg>
+      <span class="bt"><b>Software Development &amp; Cloud Engineering Bootcamp</b><span>Spec it · Build it · Ship it</span></span>
+    </a>
+    <a class="nav-back" href="../index.html#roadmap">← Roadmap</a>
+  </div>
+</nav>
+
+<div class="head-bg">
+  <header class="wrap lesson-head">
+    <div class="crumb"><a href="../index.html">Home</a> / <a href="../index.html#roadmap">Roadmap</a> / Week 2</div>
+    <p class="eyebrow">Week 02 · Set up &amp; spec</p>
+    <h1 class="big">Write the spec</h1>
+    <p class="lead">Before a single line of code, you decide <em>what</em> you're building and <em>why</em>. This week you learn spec-driven development and turn a fuzzy idea — "a fitness tracker" — into a clear, honest <code>SPEC.md</code>: who it's for, what it does in v1, what it deliberately won't do, and how you'll know it's done.</p>
+    <div class="chips">
+      <span class="chip"><span class="dot"></span>≈ 2–3 hours</span>
+      <span class="chip p"><span class="dot"></span>Phase: Set up &amp; spec</span>
+      <span class="chip g"><span class="dot"></span>Ship: <code>SPEC.md</code> v1</span>
+    </div>
+  </header>
+</div>
+
+<div class="wrap layout">
+  <main class="content">
+
+    <div class="objectives">
+      <h2>🎯 By the end of this week</h2>
+      <ul>
+        <li>You can explain what <b>spec-driven development</b> is and why the spec comes before the code.</li>
+        <li>Your repo has a filled-in <b><code>docs/SPEC.md</code></b>: summary, users, features, non-goals, data, sign-in, journeys, success.</li>
+        <li>You've made the key product call — <b>which features are in v1, and which are deliberately out</b>.</li>
+        <li>Your AI agent has <b>reviewed the spec for gaps and contradictions</b>, and you've acted on its notes.</li>
+        <li><code>SPEC.md</code> v1 is committed and pushed.</li>
+      </ul>
+    </div>
+
+    <div class="note" style="margin-top:22px">
+      <span class="i">🧭</span>
+      <p><b>What a spec is — and isn't.</b> A spec answers <em>what</em> and <em>why</em> in plain words. It is <b>not</b> code, not database tables, not API routes — that's next week's <code>ARCH.md</code>. If you catch yourself writing <code>CREATE TABLE</code>, stop: you've jumped ahead.</p>
+    </div>
+
+    <section class="step s1" id="mindset">
+      <div class="kicker"><span class="sn">1</span><h2>The spec-driven mindset</h2></div>
+      <span class="est">≈ 15 min · read</span>
+      <p>Most bugs aren't typos — they're <b>misunderstandings</b> about what was supposed to happen. Spec-driven development front-loads that thinking. You write down the plan first, so that you (and your AI agent) build the right thing, not just <em>a</em> thing.</p>
+      <ul>
+        <li><b>The spec is the source of truth.</b> When code and spec disagree, one of them is wrong — and you decide which, on purpose.</li>
+        <li><b>Small and honest beats big and vague.</b> Three features you can demo are worth more than ten you can't.</li>
+        <li><b>The agent works from your words.</b> A sharp spec produces sharp code; a hand-wavy spec produces a hand-wavy mess.</li>
+      </ul>
+      <div class="note rule">
+        <span class="i">🧠</span>
+        <p><span class="k">Remember</span>You may let AI write the code — but you may not ship what you can't explain. The spec is where your understanding starts.</p>
+      </div>
+    </section>
+
+    <section class="step s2" id="open">
+      <div class="kicker"><span class="sn">2</span><h2>Open the template</h2></div>
+      <span class="est">≈ 5 min</span>
+      <p>The starter kit already ships a <code>SPEC.md</code> template full of guided prompts. Open <code>docs/SPEC.md</code> in your repo (from <a href="week-01.html">Week 1</a>). Prefer to skim it first? <a href="https://github.com/Code-Impact/code-impact-academy/blob/main/assets/SPEC.md" target="_blank" rel="noopener">Read the template on GitHub</a>.</p>
+      <p>You'll fill in these sections, top to bottom:</p>
+      <pre class="code">1. One-line summary        <span class="c"># what &amp; who, in one sentence</span>
+2. The people (users)      <span class="c"># who uses it, what they want</span>
+3. Core features (v1)      <span class="c"># the 3–6 that matter</span>
+4. Non-goals               <span class="c"># what you will NOT build yet</span>
+5. The data                <span class="c"># the "things" the app stores</span>
+6. Sign-in                 <span class="c"># public vs private</span>
+7. Key user journeys       <span class="c"># 2–3 flows, start to finish</span>
+8. Success criteria        <span class="c"># how you know v1 is done</span>
+9. Open questions &amp; risks  <span class="c"># what you're unsure about</span></pre>
+      <p><b>Delete each italic prompt as you replace it with your own answer.</b> The thinking is the point — don't let the agent write this part for you yet.</p>
+    </section>
+
+    <section class="step s3" id="who">
+      <div class="kicker"><span class="sn">3</span><h2>Summary, users &amp; the data</h2></div>
+      <span class="est">≈ 25 min</span>
+      <h3>One-line summary</h3>
+      <p>Force yourself into a single sentence. Example: <em>"A private web app where I log workouts and see whether I'm hitting my weekly goals."</em> If you can't say it in one line, you don't know it yet.</p>
+      <h3>The people</h3>
+      <p>Even a personal tracker has a user — say it clearly. Name the <b>primary user</b>, <b>what they want to achieve</b>, and <b>what would make them stop using it</b> (this last one quietly reveals your real requirements).</p>
+      <h3>The data</h3>
+      <p>List the main "things" the app remembers and their key fields — but <b>don't design tables</b>. That's architecture. For example:</p>
+      <pre class="code"><span class="c"># Thing → fields</span>
+Workout   → date, type, duration, notes
+Goal      → metric, target, period</pre>
+    </section>
+
+    <section class="step s4" id="features">
+      <div class="kicker"><span class="sn">4</span><h2>Features &amp; non-goals</h2></div>
+      <span class="est">≈ 25 min</span>
+      <p>This is the heart of the spec — and the decision you'll defend on Friday.</p>
+      <h3>Core features (v1)</h3>
+      <p>Aim for <b>3–6 features</b>. The test: <em>if you can't demo it, it's not a feature yet.</em> "Nice dashboard" isn't a feature; "see this week's total minutes" is.</p>
+      <h3>Non-goals</h3>
+      <p>Just as important — list what you're <b>deliberately not</b> building in v1 (social sharing, a mobile app, AI coaching, teams…). Non-goals are how you protect yourself from scope creep and actually ship.</p>
+      <div class="decision">
+        <div class="dh"><span class="tag">Decide</span> What's in v1 — and what's out</div>
+        <p>Everyone builds "a fitness tracker with Gmail login", but <b>your</b> v1 line is yours to draw. Pick the smallest set that's genuinely useful and demoable in 12 weeks.</p>
+        <p><b>Your call:</b> the 3–6 features that make the cut, and an honest non-goals list. Write a sentence on <em>why</em> each borderline feature is in or out.</p>
+      </div>
+    </section>
+
+    <section class="step s5" id="rest">
+      <div class="kicker"><span class="sn">5</span><h2>Sign-in, journeys &amp; success</h2></div>
+      <span class="est">≈ 20 min</span>
+      <h3>Sign-in</h3>
+      <p>This app uses <b>Google (Gmail) login via Supabase</b> (you'll build it in week 5). For now just answer two questions: what can a <b>signed-out</b> visitor see, and what is <b>private</b> to the signed-in user?</p>
+      <h3>Key user journeys</h3>
+      <p>Walk through 2–3 things a user actually does, start to finish, in plain steps. For example:</p>
+      <pre class="code"><b>Log a workout:</b> sign in → tap "Add" → pick type &amp; duration
+              → save → see it in today's list</pre>
+      <h3>Success criteria</h3>
+      <p>Write checks you can literally tick off — <em>"I can log a workout and see it after refresh", "I only see my own data"</em>. These become your definition of "done" for the whole project.</p>
+    </section>
+
+    <section class="step s6" id="review">
+      <div class="kicker"><span class="sn">6</span><h2>Have your agent review it</h2></div>
+      <span class="est">≈ 15 min</span>
+      <p>Now use the agent — not to write the spec, but to <b>pressure-test</b> it. This is the loop from week 1: prompt → review → act.</p>
+      <pre class="code"><span class="c">Prompt to your agent:</span>
+<b>"Review docs/SPEC.md as a skeptical engineer. Point out gaps,
+contradictions, and any feature that isn't clearly demoable.
+Do NOT change the file — just list your findings."</b></pre>
+      <p>Read its findings critically — the agent is a reviewer, not a boss. Where it's right, <b>you</b> edit the spec. Where it's wrong, note why. Then commit:</p>
+      <pre class="code">git add docs/SPEC.md
+git commit -m <b>"SPEC.md v1: users, features, non-goals, data"</b>
+git push</pre>
+      <div class="note tip">
+        <span class="i">✅</span>
+        <p><b>Spec changes first, always.</b> For the rest of the course, when the plan changes you update <code>SPEC.md</code> <em>before</em> the code. It stays the source of truth.</p>
+      </div>
+    </section>
+
+    <div class="done" id="done">
+      <h2>✅ Definition of done</h2>
+      <ul class="check">
+        <li><span class="tick">✓</span> Every section of <code>docs/SPEC.md</code> is filled in — no italic prompts left.</li>
+        <li><span class="tick">✓</span> You have <b>3–6 demoable v1 features</b> and an explicit <b>non-goals</b> list.</li>
+        <li><span class="tick">✓</span> Data "things", sign-in rules, 2–3 journeys, and tick-off success criteria are written.</li>
+        <li><span class="tick">✓</span> The agent reviewed the spec and you acted on (or consciously rejected) its notes.</li>
+        <li><span class="tick">✓</span> <code>SPEC.md</code> v1 is committed and pushed.</li>
+        <li><span class="tick">✓</span> You can explain, out loud, why each feature is in or out of v1.</li>
+      </ul>
+    </div>
+
+    <h2 id="demo" style="margin-top:34px">🎤 Friday demo — 5 minutes</h2>
+    <ol class="demo">
+      <li>Your one-line summary and who the app is for.</li>
+      <li>Your v1 features — and one thing you deliberately cut, and why.</li>
+      <li>Walk one user journey end to end from the spec.</li>
+      <li>One gap the agent's review caught that you'd missed.</li>
+      <li>What architecture question you're most unsure about for next week.</li>
+    </ol>
+
+    <h2 id="help" style="margin-top:34px">Stuck? Common snags</h2>
+    <details>
+      <summary>My feature list keeps growing</summary>
+      <div class="fa"><p>That's scope creep — the exact thing non-goals exist to stop. Move anything you're unsure about into <b>Non-goals</b> with a note "maybe v2". You can always promote it later; you can't un-ship a bloated v1.</p></div>
+    </details>
+    <details>
+      <summary>I keep writing about tables and screens</summary>
+      <div class="fa"><p>You've drifted into architecture. Tables, columns and API routes belong in <b>next week's <code>ARCH.md</code></b>. In the spec, say "the app stores workouts" — not "a <code>workouts</code> table with a <code>uuid</code> primary key".</p></div>
+    </details>
+    <details>
+      <summary>Should I let the agent write the spec for me?</summary>
+      <div class="fa"><p>No — write it yourself this week. The agent is great at <b>reviewing</b> your spec for holes, but the product thinking is the skill you're here to build. If you outsource it, you'll be unable to explain your own app.</p></div>
+    </details>
+
+    <div class="pager">
+      <a class="pg" href="week-01.html">
+        <div class="l">← Previous</div>
+        <h4>Week 1 · Liftoff: your AI cockpit</h4>
+      </a>
+      <a class="pg next" href="week-03.html">
+        <div class="l">Next →</div>
+        <h4>Week 3 · Spec → architecture</h4>
+      </a>
+    </div>
+  </main>
+
+  <aside class="toc" aria-label="On this page">
+    <div class="tt">On this page</div>
+    <a href="#mindset">1 · The mindset</a>
+    <a href="#open">2 · Open the template</a>
+    <a href="#who">3 · Summary &amp; data</a>
+    <a href="#features">4 · Features &amp; non-goals</a>
+    <a href="#rest">5 · Sign-in &amp; journeys</a>
+    <a href="#review">6 · Agent review</a>
+    <a href="#done">Definition of done</a>
+    <a href="#demo">Friday demo</a>
+    <a href="#help">Common snags</a>
+  </aside>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../index.html" style="margin-right:0">
+      <svg class="logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M16 24c0-5 3.6-9 8-9s8 4 8 9-3.6 9-8 9c-3 0-5-1.8-6.4-4" stroke="url(#lg)" stroke-width="5" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span class="bt"><b>Software Development &amp; Cloud Engineering Bootcamp</b><span>Spec it · Build it · Ship it</span></span>
+    </a>
+    <p>Week 2 of 12 · Spec it · build it with AI · ship it to the cloud.</p>
+  </div>
+</footer>
+
+</body>
+</html>

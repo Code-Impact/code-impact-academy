@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 4 — Front end, live on Vercel · Software Development &amp; Cloud Engineering Bootcamp</title>
+<meta name="description" content="Week 4 of the bootcamp: scaffold the React front end from your ARCH.md with AI agents, run it locally, and deploy the first version live to Vercel.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF; --bg-soft:#F6F8FE; --card:#FFFFFF;
+    --ink:#101A3D; --body:#5A6480; --muted:#8A93A8; --line:#E9ECF7;
+    --blue:#2F54F6; --blue-ink:#2140D6; --blue-soft:#EBEFFF;
+    --purple:#7C3AED; --purple-soft:#F2ECFE;
+    --green:#10B981; --green-soft:#E4F6EF;
+    --amber:#F59E0B; --amber-soft:#FDF1DA;
+    --cyan:#0EA5E9; --cyan-soft:#E4F5FE;
+    --shadow:0 12px 34px -14px rgba(31,45,90,.18);
+    --shadow-lift:0 26px 50px -20px rgba(31,45,90,.28);
+    --radius:18px; --wrap:1160px; --read:800px;
+    --display:"Sora",system-ui,sans-serif; --font:"Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{margin:0;background:var(--bg);color:var(--body);font-family:var(--font);font-size:16.5px;line-height:1.68;-webkit-font-smoothing:antialiased}
+  a{color:var(--blue);text-decoration:none}
+  a:hover{text-decoration:underline}
+  h1,h2,h3,h4{font-family:var(--display);color:var(--ink);line-height:1.16;margin:0;font-weight:700}
+  p{margin:0 0 1rem}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--purple);font-weight:600;margin:0 0 .8rem;display:flex;align-items:center;gap:10px}
+  .eyebrow::after{content:"";height:2px;width:34px;background:var(--purple);border-radius:2px;opacity:.5}
+  code{font-family:var(--mono);font-size:.86em;background:var(--blue-soft);color:var(--blue-ink);padding:2px 7px;border-radius:6px}
+  .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;gap:18px;height:68px;max-width:var(--wrap);margin:0 auto;padding:0 24px}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto;min-width:0}
+  .brand:hover{text-decoration:none}
+  .brand .logo{width:36px;height:36px;flex:none}
+  .brand .bt{display:flex;flex-direction:column;line-height:1.05;min-width:0}
+  .brand .bt b{font-family:var(--display);font-weight:700;color:var(--ink);font-size:.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand .bt span{font-size:.72rem;color:var(--muted);font-weight:500}
+  .nav-back{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:.9rem;color:var(--body);background:var(--purple-soft);padding:9px 14px;border-radius:10px;white-space:nowrap}
+  .nav-back:hover{color:var(--purple);text-decoration:none}
+  @media (max-width:640px){.brand .bt span{display:none}}
+  .head-bg{background:radial-gradient(55% 60% at 88% 0%, rgba(124,58,237,.14), transparent 60%),radial-gradient(50% 55% at 6% 6%, rgba(47,84,246,.10), transparent 55%),linear-gradient(180deg,#F9F7FF,#FFFFFF 75%);border-bottom:1px solid var(--line)}
+  .lesson-head{padding:44px 0 34px}
+  .crumb{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-bottom:16px}
+  .crumb a{color:var(--body);font-weight:600}
+  h1.big{font-size:clamp(2.1rem,4.4vw,3.1rem);font-weight:800;letter-spacing:-.02em;color:var(--ink);max-width:20ch}
+  .lead{font-size:1.14rem;color:var(--body);max-width:60ch;margin:18px 0 22px}
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 14px;box-shadow:var(--shadow);font-size:.85rem;font-weight:600;color:var(--ink)}
+  .chip .dot{width:9px;height:9px;border-radius:3px;background:var(--purple)}
+  .chip.g .dot{background:var(--green)} .chip.b .dot{background:var(--blue)} .chip.a .dot{background:var(--amber)}
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:44px;align-items:start;padding:44px 0 20px}
+  @media (max-width:960px){.layout{grid-template-columns:1fr;gap:8px}}
+  .content{max-width:var(--read);min-width:0}
+  .content h2{font-size:clamp(1.5rem,3vw,1.9rem);margin:8px 0 6px;scroll-margin-top:88px}
+  .content h3{font-size:1.2rem;margin:26px 0 6px}
+  .content p{color:var(--body)}
+  .content ul,.content ol{color:var(--body);padding-left:1.3em;margin:0 0 1rem}
+  .content li{margin:.35rem 0}
+  .content strong,.content b{color:var(--ink)}
+  .step{position:relative;padding:30px 0 34px;border-top:1px solid var(--line)}
+  .step:first-of-type{border-top:0}
+  .step .kicker{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .step .sn{width:40px;height:40px;border-radius:11px;background:var(--purple);color:#fff;display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:1rem;flex:none;box-shadow:0 10px 20px -10px rgba(124,58,237,.6)}
+  .step.s2 .sn{background:var(--blue);box-shadow:0 10px 20px -10px rgba(47,84,246,.6)}
+  .step.s3 .sn{background:var(--green);box-shadow:0 10px 20px -10px rgba(16,185,129,.5)}
+  .step.s4 .sn{background:var(--amber);color:#5a3d00}
+  .step.s5 .sn{background:var(--cyan)}
+  .step.s6 .sn{background:var(--blue-ink)}
+  .step .kicker h2{margin:0}
+  .est{font-family:var(--mono);font-size:.7rem;font-weight:600;color:var(--muted);letter-spacing:.04em}
+  .code{background:#0F1B3D;color:#D9E1FF;border-radius:14px;padding:16px 18px;overflow-x:auto;font-family:var(--mono);font-size:.86rem;line-height:1.7;margin:0 0 1rem;box-shadow:var(--shadow)}
+  .code .c{color:#7C89BC}
+  .code .g{color:#37D3A6}
+  .code b{color:#9FB4FF;font-weight:600}
+  .note{display:flex;gap:14px;align-items:flex-start;background:var(--blue-soft);border-radius:14px;padding:16px 18px;border:1px solid #DCE3FF;margin:0 0 1.1rem}
+  .note.tip{background:var(--green-soft);border-color:#C7EBDC}
+  .note.warn{background:var(--amber-soft);border-color:#F6E3BE}
+  .note.rule{background:linear-gradient(120deg,#131f45,#0F1B3D);border:0;color:#fff}
+  .note .i{font-size:1.25rem;line-height:1.2;flex:none}
+  .note p{margin:0;font-size:.97rem;color:#3A4468}
+  .note b{color:var(--blue-ink)}
+  .note.tip b{color:#0b7a54} .note.warn b{color:#9A6200}
+  .note.rule p{color:#DDE5FF} .note.rule b{color:#fff}
+  .note.rule .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#8FA6FF;font-weight:600;display:block;margin-bottom:5px}
+  .decision{background:#fff;border:1px solid var(--line);border-left:5px solid var(--purple);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);margin:0 0 1.1rem}
+  .decision .dh{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:700;color:var(--ink);font-size:1.02rem;margin-bottom:6px}
+  .decision .dh .tag{font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--purple);background:var(--purple-soft);padding:3px 8px;border-radius:6px}
+  .decision p{margin:0 0 .5rem;font-size:.96rem}
+  .decision p:last-child{margin:0}
+  .check{list-style:none;padding:0;margin:0 0 1rem;display:grid;gap:10px}
+  .check li{display:flex;gap:11px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 15px;box-shadow:var(--shadow);font-size:.96rem;color:var(--ink)}
+  .check .tick{color:var(--green);font-weight:800;flex:none}
+  .objectives{background:var(--bg-soft);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;margin:0 0 6px}
+  .objectives h2{margin:0 0 12px;font-size:1.25rem}
+  .objectives ul{margin:0;padding-left:1.2em}
+  .objectives li{margin:.4rem 0}
+  .toc{position:sticky;top:88px;font-size:.9rem}
+  @media (max-width:960px){.toc{display:none}}
+  .toc .tt{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:12px}
+  .toc a{display:block;color:var(--body);padding:6px 0 6px 14px;border-left:2px solid var(--line);font-weight:500}
+  .toc a:hover{color:var(--purple);border-color:var(--purple);text-decoration:none}
+  .done{background:linear-gradient(180deg,#fff,#FBFCFF);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;box-shadow:var(--shadow);margin:8px 0 0}
+  .done h2{margin:0 0 6px}
+  .demo{list-style:none;counter-reset:d;padding:0;margin:10px 0 0}
+  .demo li{counter-increment:d;display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.96rem;color:var(--ink)}
+  .demo li:last-child{border-bottom:0}
+  .demo li::before{content:counter(d);font-family:var(--mono);font-weight:600;color:var(--purple);flex:none;width:20px}
+  details{background:#fff;border:1px solid var(--line);border-radius:12px;padding:2px 18px;margin:0 0 10px;box-shadow:var(--shadow)}
+  details summary{cursor:pointer;font-weight:600;color:var(--ink);padding:14px 0;list-style:none;display:flex;align-items:center;gap:10px}
+  details summary::-webkit-details-marker{display:none}
+  details summary::before{content:"+";font-family:var(--mono);color:var(--purple);font-size:1.1rem;flex:none}
+  details[open] summary::before{content:"–"}
+  details .fa{padding:0 0 14px;font-size:.95rem;color:var(--body)}
+  details .fa p:last-child{margin:0}
+  .pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:40px 0 10px}
+  @media (max-width:600px){.pager{grid-template-columns:1fr}}
+  .pg{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);display:block}
+  .pg:hover{border-color:var(--purple);text-decoration:none;transform:translateY(-3px);transition:.16s}
+  .pg .l{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .pg h4{margin:5px 0 0;font-size:1.05rem}
+  .pg.next{text-align:right}
+  .pg.soon{opacity:.75;cursor:default}
+  .pg.soon:hover{border-color:var(--line);transform:none}
+  footer{padding:44px 0;border-top:1px solid var(--line);margin-top:20px;background:var(--bg-soft)}
+  .foot{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+  .foot p{margin:0;color:var(--body);font-size:.9rem}
+  :focus-visible{outline:3px solid var(--purple);outline-offset:2px;border-radius:6px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="../index.html" aria-label="Home">
+      <svg class="logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="48" y2="48"><stop offset="0" stop-color="#2F54F6"/><stop offset="1" stop-color="#7C3AED"/></linearGradient></defs>
+        <path d="M16 24c0-5 3.6-9 8-9s8 4 8 9-3.6 9-8 9c-3 0-5-1.8-6.4-4" stroke="url(#lg)" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <path d="M32 24c0-5-3.6-9-8-9-3 0-5 1.8-6.4 4" stroke="#2F54F6" stroke-width="5" stroke-linecap="round" fill="none" opacity=".5"/>
+        <circle cx="24" cy="24" r="22" stroke="url(#lg)" stroke-width="2.4" opacity=".18"/>
+      </svg>
+      <span class="bt"><b>Software Development &amp; Cloud Engineering Bootcamp</b><span>Spec it · Build it · Ship it</span></span>
+    </a>
+    <a class="nav-back" href="../index.html#roadmap">← Roadmap</a>
+  </div>
+</nav>
+
+<div class="head-bg">
+  <header class="wrap lesson-head">
+    <div class="crumb"><a href="../index.html">Home</a> / <a href="../index.html#roadmap">Roadmap</a> / Week 4</div>
+    <p class="eyebrow">Week 04 · Build with AI</p>
+    <h1 class="big">Front end, live on Vercel</h1>
+    <p class="lead">Docs become a real, running thing this week. You'll direct AI agents to scaffold the React front end straight from your <code>ARCH.md</code>, run it on your machine, then deploy the first version to <b>Vercel</b> — a live URL you can send to a friend. No real login or data yet; that's weeks 5–6. This week is about a screen you can see.</p>
+    <div class="chips">
+      <span class="chip"><span class="dot"></span>≈ 3–4 hours</span>
+      <span class="chip b"><span class="dot"></span>Phase: Build with AI</span>
+      <span class="chip g"><span class="dot"></span>Ship: front end <b>online on Vercel</b></span>
+    </div>
+  </header>
+</div>
+
+<div class="wrap layout">
+  <main class="content">
+
+    <div class="objectives">
+      <h2>🎯 By the end of this week</h2>
+      <ul>
+        <li>A running <b>React app</b> in your repo's <code>frontend/</code>, scaffolded with the agent from your <code>ARCH.md</code>.</li>
+        <li>It runs <b>locally</b> — <code>npm run dev</code> opens your screens in the browser.</li>
+        <li>Your chosen <b>screens and component structure</b> are in place (with placeholder/mock data).</li>
+        <li>The front end is <b>deployed and live on Vercel</b> from your GitHub repo.</li>
+        <li>You can explain what each component does and where the data will come from later.</li>
+      </ul>
+    </div>
+
+    <div class="note" style="margin-top:22px">
+      <span class="i">🎨</span>
+      <p><b>Design first, generate second.</b> The agent builds fast — so if you don't decide your screens, you'll get <em>its</em> idea of a fitness tracker, not yours. Spend the first 20 minutes on paper before you prompt.</p>
+    </div>
+
+    <section class="step s1" id="screens">
+      <div class="kicker"><span class="sn">1</span><h2>Decide your screens</h2></div>
+      <span class="est">≈ 20 min</span>
+      <p>Pull up your spec's user journeys and turn them into a short list of <b>screens</b> and the <b>components</b> each needs. Keep v1 small — you can always add more.</p>
+      <pre class="code"><span class="c"># A typical v1</span>
+Screens:     Dashboard · Add workout · History
+Components:  NavBar · WorkoutForm · WorkoutList
+             · WorkoutCard · WeekSummary</pre>
+      <div class="decision">
+        <div class="dh"><span class="tag">Decide</span> Screens &amp; component structure</div>
+        <p>Which screens exist in v1, how you navigate between them, and how you break the UI into components. There's no single right answer — a flat three-screen app is a fine call.</p>
+        <p><b>Your call:</b> the screen list and component tree. Jot it in <code>ARCH.md</code> so the doc stays the source of truth.</p>
+      </div>
+    </section>
+
+    <section class="step s2" id="scaffold">
+      <div class="kicker"><span class="sn">2</span><h2>Scaffold with the agent</h2></div>
+      <span class="est">≈ 45 min</span>
+      <p>Now direct the agent to build it — pointing at your architecture, not a blank prompt. Work in the <code>frontend/</code> folder from the starter kit.</p>
+      <pre class="code"><span class="c">Prompt to your agent:</span>
+<b>"In frontend/, scaffold a React + Vite app (JavaScript, React Router).
+Create the screens and components listed in docs/ARCH.md. Use mock
+in-memory data for now — no backend or auth yet. Keep components small
+and in their own files."</b></pre>
+      <p><b>Build in small steps.</b> Ask for one screen, review the diff, run it, then ask for the next. A giant "build the whole app" prompt gives you a giant diff you can't review — the opposite of the point.</p>
+      <div class="note rule">
+        <span class="i">🧠</span>
+        <p><span class="k">The one rule</span>The agent will happily generate a hundred lines you didn't read. Don't accept a component you couldn't explain in your demo — that's the next thing you learn, not the next thing you merge.</p>
+      </div>
+    </section>
+
+    <section class="step s3" id="run">
+      <div class="kicker"><span class="sn">3</span><h2>Run it locally</h2></div>
+      <span class="est">≈ 20 min</span>
+      <p>Install dependencies and start the dev server from inside <code>frontend/</code>:</p>
+      <pre class="code">cd frontend
+npm install
+npm run dev        <span class="c"># opens http://localhost:5173</span></pre>
+      <p>Click through your screens. Broken? That's normal — feed the exact error back to the agent (<em>"clicking Add throws this: …"</em>), review its fix, and re-run. This is the build loop in miniature.</p>
+      <div class="note tip">
+        <span class="i">✅</span>
+        <p><b>Commit once it runs.</b> A working local app is a real milestone: <code>git add -A &amp;&amp; git commit -m "Front end scaffold: screens + mock data" &amp;&amp; git push</code>.</p>
+      </div>
+    </section>
+
+    <section class="step s4" id="deploy">
+      <div class="kicker"><span class="sn">4</span><h2>Deploy to Vercel</h2></div>
+      <span class="est">≈ 30 min</span>
+      <p>Time to put it online. <b>Vercel</b> builds your app from GitHub and gives it a public URL — and later, every push will redeploy it automatically.</p>
+      <ol>
+        <li>Sign in at <a href="https://vercel.com" target="_blank" rel="noopener">vercel.com</a> with your <b>GitHub</b> account.</li>
+        <li><b>Add New → Project</b>, and import your repo.</li>
+        <li>Set the <b>Root Directory</b> to <code>frontend</code> (important — your app lives in a subfolder). Vercel auto-detects Vite; leave the build command as detected.</li>
+        <li>Click <b>Deploy</b> and wait for the build to finish.</li>
+      </ol>
+      <div class="note warn">
+        <span class="i">⚠️</span>
+        <p><b>Build failed?</b> The most common cause is the wrong Root Directory — it must point at the folder with <code>package.json</code> (<code>frontend</code>). Read Vercel's build log; it names the failing step. Fix locally, push, and it redeploys.</p>
+      </div>
+    </section>
+
+    <section class="step s5" id="verify">
+      <div class="kicker"><span class="sn">5</span><h2>Verify &amp; iterate</h2></div>
+      <span class="est">≈ 15 min</span>
+      <p>Open your <code>*.vercel.app</code> URL on your phone and on your laptop. It's really on the internet now. Make one small visible change (a title, a color), commit and push, and watch Vercel <b>redeploy automatically</b> — your first taste of the GitOps loop you'll formalise in week 10.</p>
+      <div class="note">
+        <span class="i">🔒</span>
+        <p><b>No secrets needed yet.</b> With mock data there's nothing sensitive to configure. When Supabase arrives in week 5, its public keys go in Vercel's <b>Environment Variables</b> — never hard-coded in the repo.</p>
+      </div>
+    </section>
+
+    <div class="done" id="done">
+      <h2>✅ Definition of done</h2>
+      <ul class="check">
+        <li><span class="tick">✓</span> <code>frontend/</code> holds a React app that runs with <code>npm run dev</code>.</li>
+        <li><span class="tick">✓</span> Your v1 screens exist and match the component structure you chose.</li>
+        <li><span class="tick">✓</span> The app is <b>live on a Vercel URL</b>, built from your GitHub repo.</li>
+        <li><span class="tick">✓</span> A push to <code>main</code> triggers an automatic Vercel redeploy.</li>
+        <li><span class="tick">✓</span> All changes are committed and pushed; no build errors.</li>
+        <li><span class="tick">✓</span> You can walk through every screen and explain each component.</li>
+      </ul>
+    </div>
+
+    <h2 id="demo" style="margin-top:34px">🎤 Friday demo — 5 minutes</h2>
+    <ol class="demo">
+      <li>Open your <b>live Vercel URL</b> — show it works on a real device.</li>
+      <li>Click through your screens and explain your component structure.</li>
+      <li>Show one diff the agent produced and what you changed about it.</li>
+      <li>Push a small change live and show the auto-redeploy.</li>
+      <li>One thing that broke, and how you fixed it.</li>
+    </ol>
+
+    <h2 id="help" style="margin-top:34px">Stuck? Common snags</h2>
+    <details>
+      <summary>Vercel build fails but it runs locally</summary>
+      <div class="fa"><p>Almost always the <b>Root Directory</b> (set it to <code>frontend</code>) or a dependency that's installed globally on your machine but not in <code>package.json</code>. Read the build log, reproduce with a clean <code>npm install</code> locally, and let the agent fix the missing piece.</p></div>
+    </details>
+    <details>
+      <summary>The agent built way more than I asked for</summary>
+      <div class="fa"><p>Reject the diff and prompt smaller: "just the Dashboard screen and its NavBar, nothing else". One screen per prompt keeps every diff reviewable — which is the whole skill this week.</p></div>
+    </details>
+    <details>
+      <summary>Should I add login and a database now?</summary>
+      <div class="fa"><p>No — that's weeks 5 and 6. This week uses <b>mock in-memory data</b> so you can focus on the UI and getting a real deployment working. Wiring auth into a front end that already deploys cleanly is far easier than doing both at once.</p></div>
+    </details>
+    <details>
+      <summary>My routes 404 on Vercel after refresh</summary>
+      <div class="fa"><p>That's a classic single-page-app rewrite issue. Ask the agent to add the standard Vite/SPA rewrite so all paths serve <code>index.html</code>, then let React Router handle routing. Commit, push, and Vercel redeploys.</p></div>
+    </details>
+
+    <div class="pager">
+      <a class="pg" href="week-03.html">
+        <div class="l">← Previous</div>
+        <h4>Week 3 · Spec → architecture</h4>
+      </a>
+      <div class="pg next soon">
+        <div class="l">Next →</div>
+        <h4>Week 5 · Sign in with Gmail <span style="color:var(--muted);font-weight:600">(soon)</span></h4>
+      </div>
+    </div>
+  </main>
+
+  <aside class="toc" aria-label="On this page">
+    <div class="tt">On this page</div>
+    <a href="#screens">1 · Decide your screens</a>
+    <a href="#scaffold">2 · Scaffold with AI</a>
+    <a href="#run">3 · Run it locally</a>
+    <a href="#deploy">4 · Deploy to Vercel</a>
+    <a href="#verify">5 · Verify &amp; iterate</a>
+    <a href="#done">Definition of done</a>
+    <a href="#demo">Friday demo</a>
+    <a href="#help">Common snags</a>
+  </aside>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../index.html" style="margin-right:0">
+      <svg class="logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M16 24c0-5 3.6-9 8-9s8 4 8 9-3.6 9-8 9c-3 0-5-1.8-6.4-4" stroke="url(#lg)" stroke-width="5" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span class="bt"><b>Software Development &amp; Cloud Engineering Bootcamp</b><span>Spec it · Build it · Ship it</span></span>
+    </a>
+    <p>Week 4 of 12 · Spec it · build it with AI · ship it to the cloud.</p>
+  </div>
+</footer>
+
+</body>
+</html>
