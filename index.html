@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud & AI Engineering Bootcamp — 12 weeks from new to builder</title>
+<meta name="description" content="A friendly 12-week bootcamp for beginners. Learn one thing, build one thing, explain one thing — every week.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFFDF9;
+    --card:#FFFFFF;
+    --ink:#2B2440;
+    --ink-soft:#5D5470;
+    --line:#EDE7F5;
+
+    --grape:#6C4BE6;   /* Foundations  */
+    --teal:#12B3B8;    /* Front end    */
+    --coral:#FF6B6B;   /* Back end     */
+    --sun:#FFB020;     /* Shipping     */
+    --mint:#39C088;    /* success/ok   */
+
+    --grape-soft:#EFE9FF;
+    --teal-soft:#DFF7F7;
+    --coral-soft:#FFE7E7;
+    --sun-soft:#FFF1D6;
+    --mint-soft:#E1F6EC;
+
+    --shadow:0 10px 30px -12px rgba(43,36,64,.18);
+    --shadow-lift:0 22px 44px -18px rgba(43,36,64,.30);
+    --radius:20px;
+    --wrap:1120px;
+    --font-display:"Fredoka",system-ui,sans-serif;
+    --font-body:"Figtree",system-ui,sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    /* warm ambient wash behind everything */
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    background:
+      radial-gradient(60% 45% at 12% 0%, rgba(108,75,230,.10), transparent 60%),
+      radial-gradient(55% 40% at 100% 8%, rgba(18,179,184,.12), transparent 60%),
+      radial-gradient(50% 45% at 85% 100%, rgba(255,176,32,.10), transparent 60%);
+  }
+  a{color:inherit}
+  h1,h2,h3{font-family:var(--font-display);font-weight:600;line-height:1.12;margin:0}
+  p{margin:0 0 1rem}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--grape);
+    font-weight:600;
+    margin:0 0 .8rem;
+  }
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,253,249,.82);
+    backdrop-filter:saturate(140%) blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;gap:16px;height:64px;max-width:var(--wrap);margin:0 auto;padding:0 24px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:600;font-size:1.06rem;text-decoration:none;margin-right:auto}
+  .brand .dot{width:26px;height:26px;border-radius:9px;background:conic-gradient(from 200deg,var(--grape),var(--teal),var(--sun),var(--coral),var(--grape));box-shadow:var(--shadow)}
+  .nav-links{display:flex;gap:4px;align-items:center}
+  .nav-links a{
+    text-decoration:none;font-weight:600;font-size:.92rem;color:var(--ink-soft);
+    padding:8px 13px;border-radius:999px;transition:.18s;
+  }
+  .nav-links a:hover{color:var(--ink);background:var(--grape-soft)}
+  .nav-cta{background:var(--ink)!important;color:#fff!important}
+  .nav-cta:hover{background:var(--grape)!important}
+  .menu-btn{display:none;border:0;background:var(--grape-soft);color:var(--grape);width:42px;height:42px;border-radius:12px;font-size:1.3rem;cursor:pointer}
+  @media (max-width:860px){
+    .nav-links{
+      position:absolute;top:64px;left:0;right:0;flex-direction:column;align-items:stretch;
+      background:var(--paper);border-bottom:1px solid var(--line);padding:10px 16px 16px;gap:2px;
+      display:none;
+    }
+    .nav-links.open{display:flex}
+    .nav-links a{padding:12px 14px}
+    .menu-btn{display:block}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{padding:72px 0 40px;position:relative}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--card);border:1px solid var(--line);border-radius:999px;
+    padding:7px 14px;font-family:var(--font-mono);font-size:.74rem;font-weight:600;
+    letter-spacing:.05em;color:var(--ink-soft);box-shadow:var(--shadow);margin-bottom:22px;
+  }
+  .hero-badge b{color:var(--grape)}
+  .hero h1{font-size:clamp(2.4rem,6vw,4rem);letter-spacing:-.02em;max-width:16ch}
+  .hero h1 .hl{
+    background:linear-gradient(120deg,var(--grape),var(--teal) 60%,var(--sun));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-sub{font-size:1.18rem;color:var(--ink-soft);max-width:52ch;margin:18px 0 26px}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:34px}
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-weight:600;
+    padding:14px 22px;border-radius:14px;transition:.18s;font-size:1rem;cursor:pointer;border:0;
+  }
+  .btn-primary{background:var(--ink);color:#fff;box-shadow:var(--shadow)}
+  .btn-primary:hover{transform:translateY(-2px);background:var(--grape);box-shadow:var(--shadow-lift)}
+  .btn-ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+  .btn-ghost:hover{transform:translateY(-2px);border-color:var(--grape);color:var(--grape)}
+  .hero-chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    font-family:var(--font-mono);font-size:.76rem;font-weight:500;
+    padding:6px 11px;border-radius:8px;background:var(--card);border:1px solid var(--line);color:var(--ink-soft);
+  }
+
+  /* thesis strip */
+  .thesis{
+    margin-top:40px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  }
+  .thesis .t{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  .thesis .t .k{font-family:var(--font-mono);font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+  .thesis .t h3{font-size:1.25rem;margin:10px 0 4px}
+  .thesis .t p{margin:0;color:var(--ink-soft);font-size:.95rem}
+  .thesis .learn{border-top:4px solid var(--grape)} .thesis .learn .k{color:var(--grape)}
+  .thesis .build{border-top:4px solid var(--teal)} .thesis .build .k{color:var(--teal)}
+  .thesis .explain{border-top:4px solid var(--sun)} .thesis .explain .k{color:#B77400}
+  @media (max-width:720px){.thesis{grid-template-columns:1fr}}
+
+  /* ---------- SECTION SHELL ---------- */
+  section{padding:64px 0}
+  .sec-head{max-width:60ch;margin-bottom:36px}
+  .sec-head h2{font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.01em}
+  .sec-head p{color:var(--ink-soft);font-size:1.08rem;margin-top:12px}
+
+  /* honest note callout */
+  .note{
+    display:flex;gap:14px;align-items:flex-start;
+    background:var(--grape-soft);border-radius:16px;padding:18px 20px;margin-top:8px;
+    border:1px solid #E2D8FB;
+  }
+  .note .i{font-size:1.3rem;line-height:1}
+  .note p{margin:0;font-size:.98rem;color:#4A3E63}
+  .note b{color:var(--grape)}
+
+  /* ---------- OUTCOMES ---------- */
+  .out-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media (max-width:860px){.out-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.out-grid{grid-template-columns:1fr}}
+  .out{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;box-shadow:var(--shadow);transition:.2s;
+  }
+  .out:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift)}
+  .out .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.3rem;margin-bottom:14px}
+  .out h3{font-size:1.12rem;margin-bottom:6px}
+  .out p{margin:0;color:var(--ink-soft);font-size:.95rem}
+
+  /* ---------- HOW A WEEK WORKS ---------- */
+  .week-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media (max-width:860px){.week-flow{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.week-flow{grid-template-columns:1fr}}
+  .flow{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+    box-shadow:var(--shadow);position:relative;
+  }
+  .flow .n{font-family:var(--font-mono);font-size:.75rem;font-weight:600;color:var(--ink-soft)}
+  .flow .big{font-size:1.7rem;margin:6px 0 2px}
+  .flow p{margin:0;font-size:.92rem;color:var(--ink-soft)}
+  .flow.f1{border-bottom:4px solid var(--grape)}
+  .flow.f2{border-bottom:4px solid var(--teal)}
+  .flow.f3{border-bottom:4px solid var(--coral)}
+  .flow.f4{border-bottom:4px solid var(--sun)}
+
+  /* ---------- ROADMAP ---------- */
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+  .lg{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:var(--ink-soft);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 13px}
+  .lg .sw{width:12px;height:12px;border-radius:4px}
+
+  .roadmap{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:820px){.roadmap{grid-template-columns:1fr}}
+  .wk{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px 22px 20px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:.2s;
+    border-left:5px solid var(--grape);
+  }
+  .wk:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift)}
+  .wk .top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .wk .num{
+    font-family:var(--font-mono);font-weight:600;font-size:.8rem;color:#fff;
+    background:var(--grape);border-radius:9px;padding:6px 10px;flex:none;
+  }
+  .wk h3{font-size:1.18rem}
+  .wk .q{font-style:italic;color:var(--ink-soft);font-size:.95rem;margin:0 0 14px}
+  .wk .meta{display:grid;gap:10px}
+  .wk .row{display:flex;gap:9px;font-size:.9rem}
+  .wk .row .lab{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;flex:none;width:74px;padding-top:2px}
+  .wk .row .val{color:var(--ink)}
+  .wk .row .val b{font-weight:600}
+  .wk .badge{position:absolute;top:16px;right:16px;font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px}
+
+  /* phase colouring */
+  .p-found{border-left-color:var(--grape)} .p-found .num{background:var(--grape)}
+  .p-front{border-left-color:var(--teal)} .p-front .num{background:var(--teal)}
+  .p-back{border-left-color:var(--coral)} .p-back .num{background:var(--coral)}
+  .p-ship{border-left-color:var(--sun)} .p-ship .num{background:var(--sun);color:#4a3200}
+  .wk.checkpoint{background:linear-gradient(180deg,#fff, #FFFBF2);border-style:dashed}
+
+  /* ---------- LIBRARY ---------- */
+  .lib-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  @media (max-width:760px){.lib-grid{grid-template-columns:1fr}}
+  .lib{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 22px;box-shadow:var(--shadow);transition:.2s;text-decoration:none;color:inherit;display:block;
+  }
+  .lib:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:var(--grape)}
+  .lib .h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .lib h3{font-size:1.1rem}
+  .lib .when{font-family:var(--font-mono);font-size:.68rem;font-weight:600;color:#fff;background:var(--teal);padding:4px 9px;border-radius:8px;white-space:nowrap}
+  .lib p{margin:0;color:var(--ink-soft);font-size:.93rem}
+  .lib .arrow{color:var(--grape);font-weight:700}
+
+  /* ---------- CAREER ---------- */
+  .career-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media (max-width:860px){.career-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:480px){.career-grid{grid-template-columns:1fr}}
+  .cc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+  .cc .ic{font-size:1.5rem;margin-bottom:10px}
+  .cc h3{font-size:1.02rem;margin-bottom:5px}
+  .cc p{margin:0;font-size:.9rem;color:var(--ink-soft)}
+
+  /* ---------- ASSESSMENT ---------- */
+  .split{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:start}
+  @media (max-width:820px){.split{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .panel .ph{padding:18px 22px;border-bottom:1px solid var(--line);font-family:var(--font-display);font-weight:600;font-size:1.1rem}
+  .abar{padding:16px 22px;border-bottom:1px solid var(--line)}
+  .abar:last-child{border-bottom:0}
+  .abar .l{display:flex;justify-content:space-between;font-weight:600;margin-bottom:8px;font-size:.96rem}
+  .abar .l span:last-child{font-family:var(--font-mono);color:var(--grape)}
+  .abar .track{height:9px;background:var(--grape-soft);border-radius:99px;overflow:hidden}
+  .abar .fill{height:100%;border-radius:99px}
+  .abar small{display:block;color:var(--ink-soft);font-size:.82rem;margin-top:7px}
+  .demo{list-style:none;padding:0;margin:0}
+  .demo li{padding:14px 22px;border-bottom:1px solid var(--line);display:flex;gap:12px;font-size:.95rem}
+  .demo li:last-child{border-bottom:0}
+  .demo .s{font-family:var(--font-mono);font-weight:600;color:var(--teal);flex:none}
+
+  /* ---------- CHECKLIST / START ---------- */
+  .start-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media (max-width:820px){.start-grid{grid-template-columns:1fr}}
+  .check{list-style:none;padding:0;margin:0;display:grid;gap:11px}
+  .check li{display:flex;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 15px;box-shadow:var(--shadow);font-size:.95rem}
+  .check .tick{color:var(--mint);font-weight:800;flex:none}
+  .kick{display:grid;gap:0}
+  .kick .kr{display:flex;gap:14px;padding:12px 0;border-bottom:1px dashed var(--line);font-size:.94rem}
+  .kick .kr:last-child{border-bottom:0}
+  .kick .kt{font-family:var(--font-mono);font-size:.78rem;font-weight:600;color:var(--grape);flex:none;width:78px}
+
+  .rule{
+    margin-top:26px;background:var(--ink);color:#fff;border-radius:var(--radius);padding:26px 28px;box-shadow:var(--shadow-lift);
+  }
+  .rule .k{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sun);font-weight:600}
+  .rule p{margin:8px 0 0;font-size:1.12rem;font-family:var(--font-display);line-height:1.4}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:56px 0 46px;border-top:1px solid var(--line);margin-top:24px}
+  .foot{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
+  .foot p{margin:0;color:var(--ink-soft);font-size:.92rem}
+  .foot .brand{margin-right:0}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+  :focus-visible{outline:3px solid var(--grape);outline-offset:2px;border-radius:6px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top"><span class="dot" aria-hidden="true"></span> Cloud &amp; AI Bootcamp</a>
+    <button class="menu-btn" aria-label="Menu" aria-expanded="false" id="menuBtn">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="#start">Start here</a>
+      <a href="#how">How it works</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#library">Library</a>
+      <a href="#career">Career</a>
+      <a href="#setup" class="nav-cta">Get set up</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <span class="hero-badge">🌱 12 weeks &nbsp;·&nbsp; <b>beginner friendly</b> &nbsp;·&nbsp; ~8–10 hrs / week</span>
+    <h1>From <span class="hl">"I'm new to this"</span> to "I built that."</h1>
+    <p class="hero-sub">A friendly, hands-on bootcamp where you build a small, real app one piece at a time — and learn to explain every part of it in plain English.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#roadmap">See the 12-week roadmap →</a>
+      <a class="btn btn-ghost" href="#start">How the week runs</a>
+    </div>
+    <div class="hero-chips">
+      <span class="chip">Python</span>
+      <span class="chip">HTML · CSS · JS</span>
+      <span class="chip">React</span>
+      <span class="chip">FastAPI</span>
+      <span class="chip">Databases</span>
+      <span class="chip">AI features</span>
+      <span class="chip">Docker</span>
+      <span class="chip">Cloud &amp; CI/CD</span>
+    </div>
+
+    <!-- thesis -->
+    <div class="thesis">
+      <div class="t learn reveal"><div class="k">Every week you…</div><h3>Learn one thing</h3><p>A few short videos, then you copy one small example yourself.</p></div>
+      <div class="t build reveal"><div class="k">Every week you…</div><h3>Build one thing</h3><p>Add one real feature to your project — something you can click.</p></div>
+      <div class="t explain reveal"><div class="k">Every week you…</div><h3>Explain one thing</h3><p>A 5-minute Friday demo: show it, say how it works, take one question.</p></div>
+    </div>
+  </div>
+</header>
+
+<!-- WHAT IT IS -->
+<section id="start">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Start here</p>
+      <h2>What this is (and what it honestly isn't)</h2>
+      <p>This is not an exam course. It's a guided programme where you build small things every week and pick up the words, tools and habits that real software, cloud and DevOps teams use.</p>
+    </div>
+    <div class="note reveal">
+      <span class="i">🫱</span>
+      <p><b>Honest expectation.</b> Twelve weeks won't make you a senior engineer — nobody's twelve weeks do. What it <em>will</em> give you: a solid foundation, a small portfolio you're proud of, and the confidence to keep learning like a junior engineer. That's the whole goal.</p>
+    </div>
+
+    <div class="sec-head reveal" style="margin-top:52px">
+      <h2>Who it's for</h2>
+    </div>
+    <div class="out-grid">
+      <div class="out reveal"><div class="ic" style="background:var(--grape-soft)">🎓</div><h3>Fresh starters</h3><p>Graduates or career changers with little or no professional software experience. No cloud, DevOps or AI background needed.</p></div>
+      <div class="out reveal"><div class="ic" style="background:var(--teal-soft)">🔁</div><h3>People who practise</h3><p>You're curious and happy to try, get stuck, and try again. That habit matters more than any talent.</p></div>
+      <div class="out reveal"><div class="ic" style="background:var(--sun-soft)">⏱️</div><h3>Around 8–10 hrs/week</h3><p>Enough time to watch, build and demo each week. Comfortable learning in English.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTCOMES -->
+<section style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">By the end</p>
+      <h2>What you'll have hands-on experience with</h2>
+      <p>Not "mastered" — <em>practised</em>. You'll have done each of these with your own hands, with help when you needed it.</p>
+    </div>
+    <div class="out-grid">
+      <div class="out reveal"><div class="ic" style="background:var(--grape-soft)">🧩</div><h3>Build a small full-stack app</h3><p>A user interface, an API and a database — working together — with guidance.</p></div>
+      <div class="out reveal"><div class="ic" style="background:var(--teal-soft)">🐙</div><h3>Use Git &amp; GitHub for real</h3><p>Save your work, make changes safely, and talk through your own code.</p></div>
+      <div class="out reveal"><div class="ic" style="background:var(--coral-soft)">🤖</div><h3>Use an AI assistant sensibly</h3><p>Ask good questions, check the answers, and fix small problems yourself.</p></div>
+      <div class="out reveal"><div class="ic" style="background:var(--sun-soft)">☁️</div><h3>Get an app online</h3><p>Understand the basics of cloud hosting — and keep secrets out of your code.</p></div>
+      <div class="out reveal"><div class="ic" style="background:var(--mint-soft)">📦</div><h3>Package with Docker</h3><p>Wrap an app so it runs the same on any machine, and set up one simple automatic check.</p></div>
+      <div class="out reveal"><div class="ic" style="background:var(--grape-soft)">🗣️</div><h3>Explain what you built</h3><p>In plain English — including what broke, and exactly how you fixed it.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW A WEEK WORKS -->
+<section id="how" style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The rhythm</p>
+      <h2>How each week works</h2>
+      <p>Same four beats every week, so you always know what to do next.</p>
+    </div>
+    <div class="week-flow">
+      <div class="flow f1 reveal"><div class="n">STEP 01</div><div class="big">📺</div><h3>Watch &amp; try</h3><p>2–3 short clips, then repeat one small guided exercise yourself.</p></div>
+      <div class="flow f2 reveal"><div class="n">STEP 02</div><div class="big">🔨</div><h3>Build</h3><p>Make one small project, or add one real feature to your main app.</p></div>
+      <div class="flow f3 reveal"><div class="n">STEP 03</div><div class="big">✍️</div><h3>Write</h3><p>A one-page note: what I learned, what was hard, what I tried.</p></div>
+      <div class="flow f4 reveal"><div class="n">STEP 04</div><div class="big">🎤</div><h3>Show</h3><p>A 5-minute Friday demo. Show it, explain it simply, take one question.</p></div>
+    </div>
+    <div class="rule reveal">
+      <div class="k">The one rule</div>
+      <p>Don't copy and paste code you can't explain. AI can help you learn — but you must be able to say what your code actually does.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">The learning journey</p>
+      <h2>The 12-week roadmap</h2>
+      <p>Every week ends with something you can see: a working feature, a GitHub update, and a short demo. The colours below show the four phases of the journey.</p>
+    </div>
+
+    <div class="legend reveal">
+      <span class="lg"><span class="sw" style="background:var(--grape)"></span> Foundations</span>
+      <span class="lg"><span class="sw" style="background:var(--teal)"></span> Front end</span>
+      <span class="lg"><span class="sw" style="background:var(--coral)"></span> Back end &amp; data</span>
+      <span class="lg"><span class="sw" style="background:var(--sun)"></span> Ship it</span>
+    </div>
+
+    <div class="roadmap">
+
+      <!-- 1 -->
+      <article class="wk p-found reveal">
+        <div class="top"><span class="num">Wk 01</span><h3>Set up your workshop</h3></div>
+        <p class="q">"How do I make and share my first piece of software?"</p>
+        <div class="meta">
+          <div class="row"><span class="lab">Learn</span><span class="val">VS Code, the terminal, Git, GitHub, and safe, sensible AI use.</span></div>
+          <div class="row"><span class="lab">Build</span><span class="val"><b>A personal profile website</b>, live online with GitHub Pages.</span></div>
+        </div>
+      </article>
+
+      <!-- 2 -->
+      <article class="wk p-found reveal">
+        <div class="top"><span class="num">Wk 02</span><h3>Speak "computer"</h3></div>
+        <p class="q">"How do I tell a computer what to do?"</p>
+        <div class="meta">
+          <div class="row"><span class="lab">Learn</span><span class="val">Python basics: variables, choices, loops, functions and simple files.</span></div>
+          <div class="row"><span class="lab">Build</span><span class="val"><b>A command-line study planner</b> or task tracker.</span></div>
+        </div>
+      </article>
+
+      <!-- 3 -->
+      <article class="wk p-front reveal">
+        <div class="top"><span class="num">Wk 03</span><h3>Build a web page</h3></div>
+        <p class="q">"How are real web pages put together?"</p>
+        <div class="meta">
+          <div class="row"><span class="lab">Learn</span><span class="val">HTML for structure and CSS for style — the calm, no-framework basics.</span></div>
+          <div class="row"><span class="lab">Build</span><span class="val"><b>A responsive learning dashboard</b> or event page.</span></div>
+        </div>
+      </article>
+
+      <!-- 4 -->
+      <article class="wk p-front reveal">
+        <div class="top"><span class="num">Wk 04</span><h3>Make it interactive</h3></div>
+        <p class="q">"How do I make a page respond to people?"</p>
+        <div class="meta">
+          <div class="row"><span class="lab">Learn</span><span class="val">JavaScript, properly: variables, functions, arrays and changing the page live.</span></div>
+          <div class="row"><span class="lab">Build</span><span class="val"><b>An interactive to-do or quiz page</b> — no framework yet.</span></div>
+        </div>
+        <span class="badge" style="background:var(--teal-soft);color:var(--teal)">extra time on JS</span>
+      </article>
+
+      <!-- 5 -->
+      <article class="wk p-front reveal">
+        <div class="top"><span class="num">Wk 05</span><h3>React, gently</h3></div>
+        <p class="q">"How do I build a modern front end?"</p>
+        <div class="meta">
+          <div class="row"><span class="lab">Learn</span><span class="val">React basics — components, state and simple forms — now that JS feels familiar.</span></div>
+          <div class="row"><span class="lab">Build</span><span class="val"><b>A goals or task-board app</b> in React.</span></div>
+        </div>
+      </article>
+
+      <!-- 6 -->
+      <article class="wk p-back reveal">
+        <div class="top"><span class="num">Wk 06</span><h3>Give it a brain (API)</h3></div>
+        <p class="q">"Where does the information come from?"</p>
+        <div class="meta">
+          <div class="row"><span class="lab">Learn</span><span class="val">APIs with FastAPI: requests, responses and simple error handling.</span></div>
+          <div class="row"><span class="lab">Build</span><span class="val"><b>A small API</b> connected to your React app.</span></div>
+        </div>
+      </article>
+
+      <!-- 7 -->
+      <article class="wk p-back reveal">
+        <div class="top"><span class="num">Wk 07</span><h3>Remember things (data)</h3></div>
+        <p class="q">"How does an app remember users and tasks?"</p>
+        <div class="meta">
+          <div class="row"><span class="lab">Learn</span><span class="val">PostgreSQL / Supabase: tables, simple queries and create-read-update-delete.</span></div>
+          <div class="row"><span class="lab">Build</span><span class="val"><b>A tracker that saves progress</b> for real.</span></div>
+        </div>
+      </article>
+
+      <!-- 8 CHECKPOINT -->
+      <article class="wk p-back checkpoint reveal">
+        <div class="top"><span class="num">Wk 08</span><h3>Pause &amp; polish</h3></div>
+        <p class="q">"Is my project solid before we add more?"</p>
+        <div class="meta">
+          <div class="row"><span class="lab">Do</span><span class="val">Catch up on anything unfinished, fix the rough edges, tidy your repo and README.</span></div>
+          <div class="row"><span class="lab">Build</span><span class="val"><b>A clean, working half-way project</b> — nobody left behind.</span></div>
+        </div>
+        <span class="badge" style="background:var(--coral-soft);color:var(--coral)">checkpoint</span>
+      </article>
+
+      <!-- 9 -->
+      <article class="wk p-back reveal">
+        <div class="top"><span class="num">Wk 09</span><h3>Add an AI feature</h3></div>
+        <p class="q">"How can an app use AI responsibly?"</p>
+        <div class="meta">
+          <div class="row"><span class="lab">Learn</span><span class="val">Prompts, API calls, checking answers, privacy and cost awareness.</span></div>
+          <div class="row"><span class="lab">Build</span><span class="val"><b>An AI helper feature</b> with clear, honest limits.</span></div>
+        </div>
+      </article>
+
+      <!-- 10 -->
+      <article class="wk p-ship reveal">
+        <div class="top"><span class="num">Wk 10</span><h3>Package it up</h3></div>
+        <p class="q">"How can my app run on any machine?"</p>
+        <div class="meta">
+          <div class="row"><span class="lab">Learn</span><span class="val">Docker: images, containers and a simple Docker Compose.</span></div>
+          <div class="row"><span class="lab">Build</span><span class="val"><b>Your project running in a container.</b></span></div>
+        </div>
+      </article>
+
+      <!-- 11 -->
+      <article class="wk p-ship reveal">
+        <div class="top"><span class="num">Wk 11</span><h3>Ship it &amp; keep it healthy</h3></div>
+        <p class="q">"What happens after I click deploy?"</p>
+        <div class="meta">
+          <div class="row"><span class="lab">Learn</span><span class="val">Deploy to a friendly host, add a GitHub Actions check, and understand logs, health checks and secrets. (Cloud &amp; Kubernetes as a guided tour — no scary bills.)</span></div>
+          <div class="row"><span class="lab">Build</span><span class="val"><b>A live app</b> that re-checks itself on every push.</span></div>
+        </div>
+      </article>
+
+      <!-- 12 -->
+      <article class="wk p-ship reveal">
+        <div class="top"><span class="num">Wk 12</span><h3>Capstone &amp; demo day</h3></div>
+        <p class="q">"Can I combine it all into one useful thing?"</p>
+        <div class="meta">
+          <div class="row"><span class="lab">Do</span><span class="val">Plan, test, present and reflect honestly on what you built.</span></div>
+          <div class="row"><span class="lab">Build</span><span class="val"><b>A small full-stack AI project</b>, presented to the group.</span></div>
+        </div>
+        <span class="badge" style="background:var(--sun-soft);color:#8a5b00">demo day 🎉</span>
+      </article>
+
+    </div>
+
+    <div class="note reveal" style="margin-top:22px">
+      <span class="i">🎨</span>
+      <p><b>Pick a topic you like.</b> Your main project can be a study planner, job tracker, sports-club helper, local event guide, finance-habit tracker or a small AI assistant. The skill matters more than the subject — so build something you actually care about.</p>
+    </div>
+  </div>
+</section>
+
+<!-- LIBRARY -->
+<section id="library">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Learning library</p>
+      <h2>Where to watch &amp; read</h2>
+      <p>These aren't a homework dump. Your trainer picks short sections each week and ties them to a build task. Watch the clip, then make one change yourself.</p>
+    </div>
+    <div class="lib-grid">
+      <a class="lib reveal" href="https://www.youtube.com/@freecodecamp" target="_blank" rel="noopener">
+        <div class="h"><h3>freeCodeCamp</h3><span class="when">from Wk 1</span></div>
+        <p>Full beginner courses on Git, Python, HTML/CSS, React, Docker and cloud. Watch only the week's section — not the whole 8-hour video. <span class="arrow">→</span></p>
+      </a>
+      <a class="lib reveal" href="https://www.youtube.com/@TraversyMedia" target="_blank" rel="noopener">
+        <div class="h"><h3>Traversy Media</h3><span class="when">Wk 1–6</span></div>
+        <p>Short, clear web-development projects. You see a working result fast, which keeps things fun. <span class="arrow">→</span></p>
+      </a>
+      <a class="lib reveal" href="https://www.youtube.com/@TechWorldwithNana" target="_blank" rel="noopener">
+        <div class="h"><h3>TechWorld with Nana</h3><span class="when">Wk 10–11</span></div>
+        <p>Docker, CI/CD and DevOps with great visuals. Save it until the basics are in place. <span class="arrow">→</span></p>
+      </a>
+      <a class="lib reveal" href="https://www.youtube.com/@KodeKloud" target="_blank" rel="noopener">
+        <div class="h"><h3>KodeKloud</h3><span class="when">Wk 10–11</span></div>
+        <p>Hands-on Linux, Docker and DevOps practice. Start with the simple beginner videos. <span class="arrow">→</span></p>
+      </a>
+      <a class="lib reveal" href="https://www.youtube.com/@IBMTechnology" target="_blank" rel="noopener">
+        <div class="h"><h3>IBM Technology</h3><span class="when">any week</span></div>
+        <p>Short explainers for when a word feels confusing. Great for the big picture — one clip at a time. <span class="arrow">→</span></p>
+      </a>
+      <a class="lib reveal" href="https://www.youtube.com/@Fireship" target="_blank" rel="noopener">
+        <div class="h"><h3>Fireship</h3><span class="when">optional</span></div>
+        <p>Fast, fun overviews of modern tools. A snack to keep curiosity high — not the main meal. <span class="arrow">→</span></p>
+      </a>
+    </div>
+    <div class="note reveal" style="margin-top:20px">
+      <span class="i">💡</span>
+      <p><b>Choosing videos:</b> prefer recent clips for fast-changing tools (cloud consoles, AI APIs); older is fine for Git or HTML. Use official docs only when you need an exact command or setup step.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CAREER -->
+<section id="career" style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Career corner</p>
+      <h2>Turning this into your next step</h2>
+      <p>A little every few weeks beats a panic at the end. Small, steady moves.</p>
+    </div>
+    <div class="career-grid">
+      <div class="cc reveal"><div class="ic">📄</div><h3>Your CV</h3><p>Turn your weekly builds into real, plain-English bullet points.</p></div>
+      <div class="cc reveal"><div class="ic">💼</div><h3>LinkedIn</h3><p>Share your Friday demos. "Learning in public" gets noticed.</p></div>
+      <div class="cc reveal"><div class="ic">🗣️</div><h3>Interview practice</h3><p>Explaining your project every Friday <em>is</em> interview practice.</p></div>
+      <div class="cc reveal"><div class="ic">🧭</div><h3>Job resources</h3><p>Where to look, what junior roles ask for, and how to apply.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ASSESSMENT -->
+<section style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">How you're marked</p>
+      <h2>Simple, honest assessment</h2>
+      <p>Understanding and steady habits count for more than a build that magically "just runs".</p>
+    </div>
+    <div class="split">
+      <div class="panel reveal">
+        <div class="ph">What trainers look for</div>
+        <div class="abar"><div class="l"><span>Working build</span><span>30%</span></div><div class="track"><div class="fill" style="width:30%;background:var(--grape)"></div></div><small>Does it run? Is the week's feature there?</small></div>
+        <div class="abar"><div class="l"><span>Can explain it</span><span>25%</span></div><div class="track"><div class="fill" style="width:25%;background:var(--teal)"></div></div><small>Can you explain your own choices and the basic ideas?</small></div>
+        <div class="abar"><div class="l"><span>GitHub habits</span><span>20%</span></div><div class="track"><div class="fill" style="width:20%;background:var(--coral)"></div></div><small>Regular commits, clear messages, a readable README.</small></div>
+        <div class="abar"><div class="l"><span>Weekly reflection</span><span>15%</span></div><div class="track"><div class="fill" style="width:15%;background:var(--sun)"></div></div><small>A short, honest note on what you learned and struggled with.</small></div>
+        <div class="abar"><div class="l"><span>Team behaviour</span><span>10%</span></div><div class="track"><div class="fill" style="width:10%;background:var(--mint)"></div></div><small>Prepared, kind, responsive, and happy to help others.</small></div>
+      </div>
+      <div class="panel reveal">
+        <div class="ph">Friday demo — 5 minutes</div>
+        <ul class="demo">
+          <li><span class="s">1</span> What I built</li>
+          <li><span class="s">2</span> Show it working</li>
+          <li><span class="s">3</span> One thing I learned</li>
+          <li><span class="s">4</span> One problem I had</li>
+          <li><span class="s">5</span> What I'll do next</li>
+        </ul>
+        <div style="padding:16px 22px;color:var(--ink-soft);font-size:.9rem;border-top:1px solid var(--line)">No long slides needed. Just show the work and talk us through it.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SETUP / GET READY -->
+<section id="setup" style="padding-top:8px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <p class="eyebrow">Get set up</p>
+      <h2>Before Week 1</h2>
+      <p>The best first lesson isn't a lecture. You'll see a tiny website work, then make your own. Get these ready first.</p>
+    </div>
+    <div class="start-grid">
+      <div class="reveal">
+        <h3 style="font-size:1.15rem;margin-bottom:14px">✅ Your checklist</h3>
+        <ul class="check">
+          <li><span class="tick">✓</span> A laptop (Windows or Mac), internet and a modern browser.</li>
+          <li><span class="tick">✓</span> A personal GitHub account and a Google account.</li>
+          <li><span class="tick">✓</span> VS Code installed, Git installed, and a working terminal.</li>
+          <li><span class="tick">✓</span> A profile photo or avatar (optional) for your Week 1 page.</li>
+          <li><span class="tick">✓</span> A notebook — paper or digital — for your weekly note.</li>
+        </ul>
+      </div>
+      <div class="panel reveal" style="padding:22px 24px">
+        <h3 style="font-size:1.15rem;margin-bottom:8px">👋 Kick-off session — 90 min</h3>
+        <div class="kick">
+          <div class="kr"><span class="kt">0–10</span><span>Welcome: the goal, and a look at a finished capstone.</span></div>
+          <div class="kr"><span class="kt">10–25</span><span>What "cloud", "AI" and "DevOps" mean in plain words.</span></div>
+          <div class="kr"><span class="kt">25–45</span><span>Live demo: build a tiny site, push it, show the live link.</span></div>
+          <div class="kr"><span class="kt">45–65</span><span>You make your accounts and your first project folder.</span></div>
+          <div class="kr"><span class="kt">65–80</span><span>Git mini-practice: change, commit, push.</span></div>
+          <div class="kr"><span class="kt">80–90</span><span>Week 1 task, how to ask for help, the Friday format.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule reveal">
+      <div class="k">The tone from day one</div>
+      <p>It's fine not to know. It's not fine to stay silent, copy blindly, or give up at the first error. Engineers learn by asking, testing and trying again.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="#top"><span class="dot" aria-hidden="true"></span> Cloud &amp; AI Bootcamp</a>
+    <p>Learn one thing · build one thing · explain one thing — every week.</p>
+  </div>
+</footer>
+
+<script>
+  // mobile nav
+  const btn = document.getElementById('menuBtn');
+  const links = document.getElementById('navLinks');
+  btn.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  links.addEventListener('click', e => {
+    if (e.target.tagName === 'A') { links.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  });
+
+  // scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => { if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
