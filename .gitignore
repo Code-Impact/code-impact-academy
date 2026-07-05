@@ -1,0 +1,7 @@
+# OS junk
+.DS_Store
+**/.DS_Store
+
+# Local backups / stray duplicates (not part of the published site)
+indexbk.html
+assets/index.html
